@@ -37,7 +37,7 @@ ADD logtrail_server.js /opt/kibana/plugins/logtrail/server/routes/server.js
 ADD logtrail_app.js /opt/kibana/plugins/logtrail/public/app.js
 
 # Add config files
-ADD FRONTEND.conf /etc/logstash/conf.d/FRONTEND.conf
+ADD DWH_FRONTEND.conf /etc/logstash/conf.d/FRONTEND.conf
 ADD ICAT.conf /etc/logstash/conf.d/ICAT.conf
 ADD IRES.conf /etc/logstash/conf.d/IRES.conf
 ADD IRODS_FRONTEND.conf /etc/logstash/conf.d/IRODS_FRONTEND.conf
@@ -46,6 +46,7 @@ ADD MIRTH.conf /etc/logstash/conf.d/MIRTH.conf
 ADD PACMAN.conf /etc/logstash/conf.d/PACMAN.conf
 ADD PROXY.conf /etc/logstash/conf.d/PROXY.conf
 ADD SOLR.conf /etc/logstash/conf.d/SOLR.conf
+ADD DAVRODS.conf /etc/logstash/conf.d/DAVRODS.conf
 ADD 30-output.conf /etc/logstash/conf.d/30-output.conf
 
 ADD ./RIT.pattern ${LOGSTASH_HOME}/patterns/RIT
