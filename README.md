@@ -4,7 +4,7 @@ Common containers for the RIT development environment. These containers are shar
 * docker-dev
 * docker-oculus
 
-**Note:** Be sure to start at least the ``proxy`` container before starting services from the other compose-projects.
+**Note:** Please note that the ``proxy`` container is required to access services from other compose-projects by ``VIRTUAL_HOST`` address.
 
 ## Config
 * To prevent this [runtime issue](https://github.com/docker-library/elasticsearch/issues/111), increase maximum memory on the docker-host machine:
