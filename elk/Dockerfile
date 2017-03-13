@@ -47,13 +47,14 @@ ADD PACMAN.conf /etc/logstash/conf.d/PACMAN.conf
 ADD PROXY.conf /etc/logstash/conf.d/PROXY.conf
 ADD SOLR.conf /etc/logstash/conf.d/SOLR.conf
 ADD DAVRODS.conf /etc/logstash/conf.d/DAVRODS.conf
+ADD 02-beats-input.conf /etc/logstash/conf.d/02-beats-input.conf
 ADD 30-output.conf /etc/logstash/conf.d/30-output.conf
 
 ADD ./RIT.pattern ${LOGSTASH_HOME}/patterns/RIT
 ADD ./kibana-exported.json /tmp/kibana-exported.json
 
 
-EXPOSE 5000 5555
+EXPOSE 5000
 
 #Create own startup script
 ADD ./start.sh /usr/local/bin/start.sh
