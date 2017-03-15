@@ -122,8 +122,7 @@ else
   fi
 
   service logstash start
-  ##Bug for crashing ELK stack when loading large amount of historical logfiles.  RITDEV-260
-  #OUTPUT_LOGFILES+="/var/log/logstash/logstash-plain.log "
+  OUTPUT_LOGFILES+="/var/log/logstash/logstash-plain.log "
 fi
 
 
