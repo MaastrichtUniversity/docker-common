@@ -12,7 +12,8 @@ RUN cd /etc/logstash && \
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    npm
+    npm \
+    nano
 RUN npm install -g elasticdump
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
