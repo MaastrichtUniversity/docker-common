@@ -23,7 +23,6 @@ _term() {
 
 trap _term SIGTERM
 
-
 ## remove pidfiles in case previous graceful termination failed
 # NOTE - This is the reason for the WARNING at the top - it's a bit hackish,
 #   but if it's good enough for Fedora (https://goo.gl/88eyXJ), it's good
@@ -31,6 +30,14 @@ trap _term SIGTERM
 
 rm -f /var/run/elasticsearch/elasticsearch.pid /var/run/logstash.pid \
   /var/run/kibana5.pid
+
+CURRENT_PASSWORD="changeme"
+  
+if [ -f /tmp/elasticpassword ]; then
+   CURRENT_PASSWORD=$ELASTIC_PASSWORD
+fi
+
+echo $CURRENT_PASSWORD
 
 ## initialise list of log files to stream in console (initially empty)
 OUTPUT_LOGFILES=""
@@ -71,12 +78,12 @@ else
   fi
 
   counter=0
-  while [ ! "$(curl -u elastic:changeme localhost:9200 2> /dev/null)" -a $counter -lt $ES_CONNECT_RETRY  ]; do
+  while [ ! "$(curl -u elastic:$CURRENT_PASSWORD localhost:9200 2> /dev/null)" -a $counter -lt $ES_CONNECT_RETRY  ]; do
     sleep 1
     ((counter++))
     echo "waiting for Elasticsearch to be up ($counter/$ES_CONNECT_RETRY)"
   done
-  if [ ! "$(curl -u elastic:changeme localhost:9200 2> /dev/null)" ]; then
+  if [ ! "$(curl -u elastic:$CURRENT_PASSWORD localhost:9200 2> /dev/null)" ]; then
     echo "Couln't start Elasticsearch. Exiting."
     echo "Elasticsearch log follows below."
     cat /var/log/elasticsearch/elasticsearch.log
@@ -88,7 +95,7 @@ else
   while [ -z "$CLUSTER_NAME" -a $counter -lt 30 ]; do
     sleep 1
     ((counter++))
-    CLUSTER_NAME=$(curl -u elastic:changeme localhost:9200/_cat/health?h=cluster 2> /dev/null | tr -d '[:space:]')
+    CLUSTER_NAME=$(curl -u elastic:$CURRENT_PASSWORD localhost:9200/_cat/health?h=cluster 2> /dev/null | tr -d '[:space:]')
     echo "Waiting for Elasticsearch cluster to respond ($counter/30)"
   done
   if [ -z "$CLUSTER_NAME" ]; then
@@ -99,6 +106,12 @@ else
   fi
   OUTPUT_LOGFILES+="/var/log/elasticsearch/${CLUSTER_NAME}.log "
 fi
+
+
+curl -u elastic:$CURRENT_PASSWORD -XPOST 'localhost:9200/_xpack/security/user/elastic/_password?pretty' -H 'Content-Type: application/json' -d '{ "password": '"\"$ELASTIC_PASSWORD\""'}'
+touch /tmp/elasticpassword
+sed -i -e 's/changeme/'"$ELASTIC_PASSWORD"'/g' /etc/logstash/conf.d/02-beats-input.conf
+sed -i -e 's/changeme/'"$ELASTIC_PASSWORD"'/g' /etc/logstash/conf.d/30-output.conf
 
 
 ### Logstash
@@ -145,9 +158,12 @@ if [ "$ELASTICSEARCH_START" -ne "1" ] && [ "$LOGSTASH_START" -ne "1" ] \
   exit 1
 fi
 
+
+
+
 cd /tmp
-elasticdump --input=kibana-exported.json --output=http://elastic:changeme@localhost:9200/.kibana --type=data
-curl --user elastic:changeme -XPUT 'http://localhost:9200/_template/filebeat' -d@/tmp/filebeat.template.json
+elasticdump --input=kibana-exported.json --output=http://elastic:$ELASTIC_PASSWORD@localhost:9200/.kibana --type=data
+curl --user elastic:$ELASTIC_PASSWORD -XPUT 'http://localhost:9200/_template/filebeat' -d@/tmp/filebeat.template.json
 
 
 touch $OUTPUT_LOGFILES
