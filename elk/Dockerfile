@@ -13,22 +13,10 @@ RUN cd /etc/logstash && \
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     npm \
+    apache2 \
     nano
 RUN npm install -g elasticdump
 RUN ln -s /usr/bin/nodejs /usr/bin/node
-
-
-ENV XPACK_VERSION 5.2.0
-ENV XPACK_PACKAGE x-pack-${XPACK_VERSION}.zip
-
-WORKDIR /tmp
-RUN curl -O https://artifacts.elastic.co/downloads/packs/x-pack/${XPACK_PACKAGE} \
- && gosu elasticsearch ${ES_HOME}/bin/elasticsearch-plugin install \
-      -Edefault.path.conf=/etc/elasticsearch \
-      file:///tmp/${XPACK_PACKAGE} --batch \
- && gosu kibana ${KIBANA_HOME}/bin/kibana-plugin install \
-      file:///tmp/${XPACK_PACKAGE} \
- && rm -f ${XPACK_PACKAGE}
 
 ###Logtrail
 RUN /opt/kibana/bin/kibana-plugin install https://github.com/sivasamyk/logtrail/releases/download/0.1.8/logtrail-5.2.0-0.1.8.zip
@@ -55,7 +43,10 @@ ADD ./RIT.pattern ${LOGSTASH_HOME}/patterns/RIT
 ADD ./kibana-exported.json /tmp/kibana-exported.json
 
 
-EXPOSE 5000
+## Reverse proxy for default site with password
+ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
+
+EXPOSE 5000 80
 
 #Create own startup script
 ADD ./start.sh /usr/local/bin/start.sh

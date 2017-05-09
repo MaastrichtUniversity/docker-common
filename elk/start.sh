@@ -31,13 +31,24 @@ trap _term SIGTERM
 rm -f /var/run/elasticsearch/elasticsearch.pid /var/run/logstash.pid \
   /var/run/kibana5.pid
 
-CURRENT_PASSWORD="changeme"
-  
-if [ -f /tmp/elasticpassword ]; then
-   CURRENT_PASSWORD=$ELASTIC_PASSWORD
-fi
+#Create htpassword file
+htpasswd -c -db /var/www/.htpasswd elastic $ELASTIC_PASSWORD
 
-echo $CURRENT_PASSWORD
+##Make apache owner of the htpasswd file
+chown -R www-data:www-data /var/www/
+
+### apache2 modules enable and server restart 
+a2enmod proxy
+a2enmod proxy_http
+a2enmod proxy_ajp
+a2enmod rewrite
+a2enmod deflate
+a2enmod headers
+a2enmod proxy_balancer
+a2enmod proxy_connect
+a2enmod proxy_html
+
+service apache2 restart
 
 ## initialise list of log files to stream in console (initially empty)
 OUTPUT_LOGFILES=""
@@ -78,12 +89,12 @@ else
   fi
 
   counter=0
-  while [ ! "$(curl -u elastic:$CURRENT_PASSWORD localhost:9200 2> /dev/null)" -a $counter -lt $ES_CONNECT_RETRY  ]; do
+  while [ ! "$(curl localhost:9200 2> /dev/null)" -a $counter -lt $ES_CONNECT_RETRY  ]; do
     sleep 1
     ((counter++))
     echo "waiting for Elasticsearch to be up ($counter/$ES_CONNECT_RETRY)"
   done
-  if [ ! "$(curl -u elastic:$CURRENT_PASSWORD localhost:9200 2> /dev/null)" ]; then
+  if [ ! "$(curl localhost:9200 2> /dev/null)" ]; then
     echo "Couln't start Elasticsearch. Exiting."
     echo "Elasticsearch log follows below."
     cat /var/log/elasticsearch/elasticsearch.log
@@ -95,7 +106,7 @@ else
   while [ -z "$CLUSTER_NAME" -a $counter -lt 30 ]; do
     sleep 1
     ((counter++))
-    CLUSTER_NAME=$(curl -u elastic:$CURRENT_PASSWORD localhost:9200/_cat/health?h=cluster 2> /dev/null | tr -d '[:space:]')
+    CLUSTER_NAME=$(curl localhost:9200/_cat/health?h=cluster 2> /dev/null | tr -d '[:space:]')
     echo "Waiting for Elasticsearch cluster to respond ($counter/30)"
   done
   if [ -z "$CLUSTER_NAME" ]; then
@@ -106,12 +117,6 @@ else
   fi
   OUTPUT_LOGFILES+="/var/log/elasticsearch/${CLUSTER_NAME}.log "
 fi
-
-
-curl -u elastic:$CURRENT_PASSWORD -XPOST 'localhost:9200/_xpack/security/user/elastic/_password?pretty' -H 'Content-Type: application/json' -d '{ "password": '"\"$ELASTIC_PASSWORD\""'}'
-touch /tmp/elasticpassword
-sed -i -e 's/changeme/'"$ELASTIC_PASSWORD"'/g' /etc/logstash/conf.d/02-beats-input.conf
-sed -i -e 's/changeme/'"$ELASTIC_PASSWORD"'/g' /etc/logstash/conf.d/30-output.conf
 
 
 ### Logstash
@@ -163,7 +168,7 @@ fi
 
 cd /tmp
 elasticdump --input=kibana-exported.json --output=http://elastic:$ELASTIC_PASSWORD@localhost:9200/.kibana --type=data
-curl --user elastic:$ELASTIC_PASSWORD -XPUT 'http://localhost:9200/_template/filebeat' -d@/tmp/filebeat.template.json
+curl -XPUT 'http://localhost:9200/_template/filebeat' -d@/tmp/filebeat.template.json
 
 
 touch $OUTPUT_LOGFILES
