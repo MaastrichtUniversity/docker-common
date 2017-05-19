@@ -31,19 +31,11 @@ trap _term SIGTERM
 rm -f /var/run/elasticsearch/elasticsearch.pid /var/run/logstash.pid \
   /var/run/kibana5.pid
 
-####################################
-### APACHE REVERSE PROXY SECTION ###
-####################################
-# The reverse proxy will require .htpasswd authentication on port 80/443 for client usage.
-# Log-sending applications communicate with elastic on port 9200 (via logstash ports 5000 and 5044) which does not
-# require authentication. This is fine, as long as ports 5000, 5044 and 9200 are not exposed outside of the Docker network
-# OR if access to those ports is regulated by iptables, thereby only allowing trusted log-sending services.
-
 #Create htpassword file
-htpasswd -c -db /opt/.htpasswd elastic $ELASTIC_PASSWORD
+htpasswd -c -db /var/www/.htpasswd elastic $ELASTIC_PASSWORD
 
 ##Make apache owner of the htpasswd file
-chown www-data:www-data /opt/.htpasswd
+chown -R www-data:www-data /var/www/
 
 ### apache2 modules enable and server restart 
 a2enmod proxy
@@ -57,8 +49,6 @@ a2enmod proxy_connect
 a2enmod proxy_html
 
 service apache2 restart
-
-####################################
 
 ## initialise list of log files to stream in console (initially empty)
 OUTPUT_LOGFILES=""
@@ -177,7 +167,7 @@ fi
 
 
 cd /tmp
-elasticdump --input=kibana-exported.json --output=http://elastic:$ELASTIC_PASSWORD@localhost:9200/.kibana --type=data
+elasticdump --input=kibana-exported.json --output=http://localhost:9200/.kibana --type=data
 curl -XPUT 'http://localhost:9200/_template/filebeat' -d@/tmp/filebeat.template.json
 
 
