@@ -29,6 +29,7 @@ ADD logtrail_app.js /opt/kibana/plugins/logtrail/public/app.js
 ADD DWH_FRONTEND.conf /etc/logstash/conf.d/FRONTEND.conf
 ADD ICAT.conf /etc/logstash/conf.d/ICAT.conf
 ADD IRES.conf /etc/logstash/conf.d/IRES.conf
+ADD IRES_CENTOS.conf /etc/logstash/conf.d/IRES_CENTOS.conf
 ADD IRODS_FRONTEND.conf /etc/logstash/conf.d/IRODS_FRONTEND.conf
 ADD METALNX.conf /etc/logstash/conf.d/METALNX.conf
 ADD MIRTH.conf /etc/logstash/conf.d/MIRTH.conf
