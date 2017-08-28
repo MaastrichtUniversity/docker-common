@@ -23,6 +23,9 @@ services:
       # otherwise logstash will keep sending its own logs to itself over and over
       LOGSPOUT: ignore
       VIRTUAL_HOST: elk.${RIT_ENV}.rit.unimaas.nl
+    ports:
+      # Expose Filebeat-ELK-port that accepts logs from non-Docker services
+      - "5044:5044"
     volumes:
       - /etc/localtime:/etc/localtime:ro
   logspout:

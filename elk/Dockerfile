@@ -33,6 +33,7 @@ ADD IRES_CENTOS.conf /etc/logstash/conf.d/IRES_CENTOS.conf
 ADD IRODS_FRONTEND.conf /etc/logstash/conf.d/IRODS_FRONTEND.conf
 ADD METALNX.conf /etc/logstash/conf.d/METALNX.conf
 ADD MIRTH.conf /etc/logstash/conf.d/MIRTH.conf
+ADD MIRTH_AZM.conf /etc/logstash/conf.d/MIRTH_AZM.conf
 ADD PACMAN.conf /etc/logstash/conf.d/PACMAN.conf
 ADD PROXY.conf /etc/logstash/conf.d/PROXY.conf
 ADD SOLR.conf /etc/logstash/conf.d/SOLR.conf
