@@ -179,7 +179,8 @@ fi
 cd /tmp
 elasticdump --input=kibana-exported.json --output=http://localhost:9200/.kibana --type=data
 curl -XPUT 'http://localhost:9200/_template/filebeat' -d@/tmp/filebeat.template.json
-
+sed -i "s/XXXXXXXXXX/$VIRTUAL_HOST/" /tmp/datahub_any.yaml
+python -m elastalert.elastalert --verbose --rule datahub_any.yaml &
 
 touch $OUTPUT_LOGFILES
 tail -f $OUTPUT_LOGFILES &

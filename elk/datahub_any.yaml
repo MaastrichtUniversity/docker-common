@@ -1,0 +1,46 @@
+# (Required)
+# Rule name, must be unique
+name: DataHub error rule
+
+# (Required)
+# Type of alert.
+# the frequency rule type alerts when num_events events occur with timeframe time
+type: any
+
+# (Required)
+# Index to search, wildcard supported
+index: filebeat-*
+
+query_key: "message"
+
+
+# (Required)
+# A list of Elasticsearch filters used for find events
+# These filters are joined with AND and nested in a filtered query
+# For more info: http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html
+filter:
+- query:
+    query_string:
+      query: "message:*ERROR* OR level:ERROR"
+
+
+alert_text: |
+    Timestamp: {0}
+    Server: XXXXXXXXXX
+    Service: {1}
+    message: {2}
+alert_text_args: ["@timestamp", "logtrail","message"]
+alert_text_type: alert_text_only
+
+# (Required)
+# The alert is use when a match is found
+alert:
+- "hipchat"
+
+hipchat:
+# The randomly generated notification token created by HipChat.
+hipchat_auth_token: "XXXX"
+# The id associated with the HipChat room you want to send the alert to
+hipchat_room_id: "3361166"
+hipchat_from: "ALERT"
+hipchat_notify : false

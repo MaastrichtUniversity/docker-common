@@ -14,7 +14,14 @@ RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     npm \
     apache2 \
-    nano
+    nano \
+    git \
+    python-dev \
+    python-pip \
+    wget
+    
+RUN pip install elastalert==0.1.25
+    
 RUN npm install -g elasticdump
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
@@ -36,6 +43,7 @@ ADD MIRTH.conf /etc/logstash/conf.d/MIRTH.conf
 ADD MIRTH_AZM.conf /etc/logstash/conf.d/MIRTH_AZM.conf
 ADD PACMAN.conf /etc/logstash/conf.d/PACMAN.conf
 ADD PROXY.conf /etc/logstash/conf.d/PROXY.conf
+ADD SOLRPROXY.conf /etc/logstash/conf.d/SOLRPROXY.conf
 ADD SOLR.conf /etc/logstash/conf.d/SOLR.conf
 ADD DAVRODS.conf /etc/logstash/conf.d/DAVRODS.conf
 ADD 02-beats-input.conf /etc/logstash/conf.d/02-beats-input.conf
@@ -44,6 +52,9 @@ ADD 30-output.conf /etc/logstash/conf.d/30-output.conf
 ADD ./RIT.pattern ${LOGSTASH_HOME}/patterns/RIT
 ADD ./kibana-exported.json /tmp/kibana-exported.json
 
+##Add the elastalert files
+ADD ./config.yaml /tmp/config.yaml
+ADD ./datahub_any.yaml /tmp/datahub_any.yaml
 
 ## Reverse proxy for default site with password
 ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
