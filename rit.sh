@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Set the prefix for the project
+COMPOSE_PROJECT_NAME="common"
+export COMPOSE_PROJECT_NAME
 
 set -e
 
@@ -37,8 +40,8 @@ if [[ $1 == "externals" ]]; then
 fi
 
 if [[ $1 == "exec" ]]; then
-    echo "Connect to container instance : $2"
-    docker exec -it $2 env COLUMNS=$(tput cols) LINES=$(tput lines) /bin/bash
+    echo "Connect to container instance : ${COMPOSE_PROJECT_NAME}_${2}_1"
+    docker exec -it ${COMPOSE_PROJECT_NAME}_${2}_1 env COLUMNS=$(tput cols) LINES=$(tput lines) /bin/bash
     exit 0
 fi
 
@@ -76,10 +79,6 @@ fi
 if ! docker network inspect oculus_default > /dev/null 2>&1; then
    docker network create oculus_default
 fi
-
-# Set the prefix for the project
-COMPOSE_PROJECT_NAME="common"
-export COMPOSE_PROJECT_NAME
 
 # Assuming docker-compose is available in the PATH
 docker-compose "$@"
