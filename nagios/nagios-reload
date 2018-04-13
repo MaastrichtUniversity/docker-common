@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo "Checking new nagios config..."
+
+nagios -v /opt/nagios/etc/nagios.cfg
+
+if [ $? -gt 0 ]; then
+    echo "Config contains errors. Aborting restart."
+    exit 1
+fi
+
+echo "Removing old config cache"
+rm /opt/nagios/var/objects.cache
+
+echo "Stopping current nagios instance"
+kill $(cat /etc/sv/nagios/supervise/pid)
+
+# wait a second to let the new instance get up and running
+sleep 1
+
+echo "Nagios config reloaded and running with PID"
+cat /etc/sv/nagios/supervise/pid
+
+exit 0

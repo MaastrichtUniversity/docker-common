@@ -39,6 +39,19 @@ services:
       DEBUG: "true"
       LOGSPOUT: ignore
     command: "logstash://elk:5000"
+  nagios:
+    build: nagios/
+    hostname: nagios
+#    environment:
+    ports:
+      # expose http port to reach nagios frontend
+      - "8080:80"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./nagios/cust-plugins:/opt/Custom-Nagios-Plugins:ro
+      - ./nagios/etc:/opt/nagios/etc:ro
+      - ./nagios/var:/opt/nagios/var
+#      - /nagiosgraph.conf:/opt/nagiosgraph/etc/nagiosgraph.conf:ro
 
 networks:
   corpus_default:
