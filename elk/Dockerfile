@@ -30,6 +30,7 @@ ADD DWH_FRONTEND.conf /etc/logstash/conf.d/FRONTEND.conf
 ADD ICAT.conf /etc/logstash/conf.d/ICAT.conf
 ADD IRES_UM.conf /etc/logstash/conf.d/IRES.conf
 ADD IRES02_UM.conf /etc/logstash/conf.d/IRES02_UM.conf
+ADD IRES_SURFSARA.conf /etc/logstash/conf.d/IRES_SURFSARA.conf
 ADD IRES_AZM.conf /etc/logstash/conf.d/IRES_CENTOS.conf
 ADD IRODS_FRONTEND.conf /etc/logstash/conf.d/IRODS_FRONTEND.conf
 ADD METALNX.conf /etc/logstash/conf.d/METALNX.conf
