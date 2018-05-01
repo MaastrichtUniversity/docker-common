@@ -26,22 +26,7 @@ ADD logtrail_server.js /opt/kibana/plugins/logtrail/server/routes/server.js
 ADD logtrail_app.js /opt/kibana/plugins/logtrail/public/app.js
 
 # Add config files
-ADD DWH_FRONTEND.conf /etc/logstash/conf.d/FRONTEND.conf
-ADD ICAT.conf /etc/logstash/conf.d/ICAT.conf
-ADD IRES_UM.conf /etc/logstash/conf.d/IRES.conf
-ADD IRES02_UM.conf /etc/logstash/conf.d/IRES02_UM.conf
-ADD IRES_SURFSARA.conf /etc/logstash/conf.d/IRES_SURFSARA.conf
-ADD IRES_AZM.conf /etc/logstash/conf.d/IRES_CENTOS.conf
-ADD IRODS_FRONTEND.conf /etc/logstash/conf.d/IRODS_FRONTEND.conf
-ADD METALNX.conf /etc/logstash/conf.d/METALNX.conf
-ADD MIRTH.conf /etc/logstash/conf.d/MIRTH.conf
-ADD MIRTH_AZM.conf /etc/logstash/conf.d/MIRTH_AZM.conf
-ADD PACMAN.conf /etc/logstash/conf.d/PACMAN.conf
-ADD PROXY.conf /etc/logstash/conf.d/PROXY.conf
-ADD SOLR.conf /etc/logstash/conf.d/SOLR.conf
-ADD DAVRODS.conf /etc/logstash/conf.d/DAVRODS.conf
-ADD 02-beats-input.conf /etc/logstash/conf.d/02-beats-input.conf
-ADD 30-output.conf /etc/logstash/conf.d/30-output.conf
+ADD logstash-config/*.conf /etc/logstash/conf.d/
 
 ADD ./RIT.pattern ${LOGSTASH_HOME}/patterns/RIT
 ADD ./kibana-exported.json /tmp/kibana-exported.json
