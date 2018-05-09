@@ -39,7 +39,43 @@ services:
       DEBUG: "true"
       LOGSPOUT: ignore
     command: "logstash://elk:5000"
-
+  rabbitmq:
+      image: rabbitmq:3-management
+      hostname: rabbitmq
+      environment:
+        RABBITMQ_DEFAULT_USER : user
+        RABBITMQ_DEFAULT_PASS : password
+      restart: on-failure
+      ports:
+            - "8888:15672"
+      volumes:
+            - /etc/localtime:/etc/localtime:ro
+  mailer:
+       build: externals/mailer
+       hostname: mailer
+       environment:
+             HTTP_AUTH_USERNAME : user
+             HTTP_AUTH_PASSWORD : password
+             RABBITMQ_HOST : rabbitmq
+             RABBITMQ_USER : user
+             RABBITMQ_PASS : password
+             TRANSPORT : "stub"
+             MICROSERVICE_PORT : 1234
+             DEFAULT_FROM : "DataHub [mailer] <datahub@maastrichtuniversity.nl>"
+             SMTP_HOST : "smtp.maastrichtuniversity.nl"
+             SMTP_PORT : 25
+             TEMPLATES_DIR : "/usr/src/app/templates"
+             PARALLELL_WORKERS : 3
+             MICROSECONDS_BETWEEN_PULLS : 60000
+             VIRTUAL_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
+       restart: on-failure
+       volumes:
+             - /etc/localtime:/etc/localtime:ro
+             - ./externals/mailer/app:/usr/src/app/
+       networks:
+             - oculus_default
+             - corpus_default
+             - default
 networks:
   corpus_default:
     external: true

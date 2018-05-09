@@ -6,7 +6,7 @@ export COMPOSE_PROJECT_NAME
 set -e
 
 
-externals=""
+externals="externals/mailer git@github.com:MaastrichtUniversity/dh_mailer.git"
 
 if [[ $1 == "externals" ]]; then
     mkdir -p externals
