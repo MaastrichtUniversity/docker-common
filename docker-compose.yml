@@ -67,6 +67,8 @@ services:
              TEMPLATES_DIR : "/usr/src/app/templates"
              PARALLELL_WORKERS : 3
              MICROSECONDS_BETWEEN_PULLS : 60000
+             LOG_LEVEL_CONSOLE : 'debug'
+             LOG_LEVEL_FILE : 'info'
              VIRTUAL_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
        restart: on-failure
        volumes:
