@@ -27,6 +27,5 @@ EMAILADDRESS %{EMAILADDRESSPART:local}@%{EMAILADDRESSPART:remote}
 
 SOLRLOG %{URIHOST:date} %{TIME:log_timestamp} %{LOGLEVEL:level}  \(%{GREEDYDATA}\) %{SYSLOG5424SD:cl} %{JAVACLASS:class} %{GREEDYDATA:solr_msg}
 
-SESSIONID ([\da-z]{6,7}|-)
 RIT_SERVICE (%{NOTSPACE}|Backup Service|Datahub from mumc )
 RIT_PROG (%{PROG}|Gemini Blueprint context shutdown thread)
