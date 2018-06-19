@@ -15,7 +15,7 @@ RUN apt-get update \
     npm \
     apache2 \
     nano
-RUN npm install -g elasticdump
+RUN npm install -g elasticdump@3.3.3
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 ###Logtrail
