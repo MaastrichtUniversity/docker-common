@@ -4,6 +4,7 @@ ENV LOGSTASH_HOME /opt/logstash
 
 WORKDIR ${LOGSTASH_HOME}
 RUN gosu logstash bin/logstash-plugin install logstash-patterns-core
+RUN gosu logstash bin/logstash-plugin update logstash-patterns-core
 RUN gosu logstash bin/logstash-plugin install logstash-input-beats
 
 RUN cd /etc/logstash && \
