@@ -51,7 +51,7 @@ services:
       volumes:
             - /etc/localtime:/etc/localtime:ro
   mailer:
-       build: externals/mailer
+       build: externals/dh-mailer
        hostname: mailer
        environment:
              HTTP_AUTH_USERNAME : user
@@ -73,7 +73,7 @@ services:
        restart: on-failure
        volumes:
              - /etc/localtime:/etc/localtime:ro
-             - ./externals/mailer/app:/usr/src/app/
+             - ./externals/dh-mailer/app:/usr/src/app/
        networks:
              - oculus_default
              - corpus_default
