@@ -60,6 +60,7 @@ services:
              RABBITMQ_USER : user
              RABBITMQ_PASS : password
              TRANSPORT : "stub"
+             BCC : "false"
              MICROSERVICE_PORT : 1234
              DEFAULT_FROM : "DataHub [mailer] <datahub@maastrichtuniversity.nl>"
              SMTP_HOST : "smtp.maastrichtuniversity.nl"
