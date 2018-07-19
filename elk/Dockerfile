@@ -36,7 +36,7 @@ ADD ./kibana-exported.json /tmp/kibana-exported.json
 ## Reverse proxy for default site with password
 ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
 
-EXPOSE 5000 80
+EXPOSE 5000 5001 80
 
 #Create own startup script
 ADD ./start.sh /usr/local/bin/start.sh
