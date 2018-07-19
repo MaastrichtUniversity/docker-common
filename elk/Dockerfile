@@ -26,6 +26,9 @@ ADD logtrail.json /opt/kibana/plugins/logtrail/logtrail.json
 ADD logtrail_server.js /opt/kibana/plugins/logtrail/server/routes/server.js
 ADD logtrail_app.js /opt/kibana/plugins/logtrail/public/app.js
 
+# Remove existing config files
+RUN rm -r /etc/logstash/conf.d/ && mkdir /etc/logstash/conf.d/
+
 # Add config files
 ADD logstash-config/*.conf /etc/logstash/conf.d/
 
