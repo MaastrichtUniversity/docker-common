@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-echo "$0 $@  [START, running in $(pwd)]"
 
 # source library dh-lib.sh
 if [[ -z $DH_ENV_HOME ]]; then
