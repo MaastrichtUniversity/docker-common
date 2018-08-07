@@ -8,7 +8,15 @@ pipeline {
     }
     stage('check files') {
       steps {
-        sh 'ls -al'
+        sh '''#!/bin/bash
+file="docker-compose.yml"
+if [ -f "$file" ]
+then
+	echo "$file found."
+else
+	echo "$file not found."
+fi
+'''
       }
     }
   }
