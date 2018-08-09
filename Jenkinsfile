@@ -26,6 +26,11 @@ fi
         sh 'docker-compose build'
       }
     }
+    stage('docker network create corpus_default') {
+      steps {
+        sh 'docker network create corpus_default'
+      }
+    }
     stage('docker-compose up') {
       steps {
         sh 'docker-compose up'
