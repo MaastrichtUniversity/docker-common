@@ -26,12 +26,21 @@ fi
         sh 'docker-compose build'
       }
     }
-    stage('docker network create corpus_default') {
+    stage('docker networks') {
       steps {
-        sh 'docker network create corpus_default'
+        sh '''if ! docker network inspect corpus_default > /dev/null 2>&1; then
+   docker network create corpus_default
+fi
+if ! docker network inspect oculus_default > /dev/null 2>&1; then
+   docker network create oculus_default
+fi'''
       }
     }
     stage('docker-compose up') {
+      environment {
+        COMPOSE_PROJECT_NAME = 'common'
+        RIT_ENV = 'dev6'
+      }
       steps {
         sh 'docker-compose up'
       }
