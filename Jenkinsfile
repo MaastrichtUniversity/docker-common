@@ -42,7 +42,8 @@ fi'''
         RIT_ENV = 'dev6'
       }
       steps {
-        sh 'docker-compose up'
+        sh 'docker-compose up -d'
+        sleep(unit: 'MINUTES', time: 3)
       }
     }
   }
