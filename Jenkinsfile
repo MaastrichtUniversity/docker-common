@@ -13,8 +13,10 @@ file="docker-compose.yml"
 if [ -f "$file" ]
 then
 	echo "$file found."
+        exit 0
 else
 	echo "$file not found."
+        exit 1
 fi
 '''
       }
