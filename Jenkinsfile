@@ -26,5 +26,10 @@ fi
         sh 'docker-compose build'
       }
     }
+    stage('docker-compose up') {
+      steps {
+        sh 'docker-compose up'
+      }
+    }
   }
 }
