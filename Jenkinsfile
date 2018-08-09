@@ -21,5 +21,10 @@ fi
 '''
       }
     }
+    stage('docker-compose build') {
+      steps {
+        sh 'docker-compose build'
+      }
+    }
   }
 }
