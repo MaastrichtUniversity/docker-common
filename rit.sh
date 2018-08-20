@@ -6,7 +6,7 @@ export COMPOSE_PROJECT_NAME
 set -e
 
 
-externals=""
+externals="externals/nagios-docker git@github.com:MaastrichtUniversity/nagios-docker.git"
 
 if [[ $1 == "externals" ]]; then
     mkdir -p externals
