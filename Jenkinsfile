@@ -5,11 +5,12 @@ pipeline {
         RIT_ENV = 'dev6'
       }
   stages {
-	stage('cleanWs') {
+	stage('clean workspace and docker') {
             steps {
                 cleanWs()
-			}
-	}
+				sh 'docker system prune -a --volumes -f'
+            }
+        }
     stage('git clone') {   
       steps {
         slackSend color: "#439FE0", message: "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
@@ -33,9 +34,8 @@ fi
     }
     stage('docker-compose build') {
       steps {
-        // new docker compose build? 
-        //sh 'docker-compose build --pull --no-cache'
-        sh 'docker-compose build'
+        sh 'docker-compose build --pull --no-cache'
+        //sh 'docker-compose build'
       }
     }
     stage('docker networks') {
