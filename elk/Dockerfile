@@ -4,6 +4,7 @@ ENV LOGSTASH_HOME /opt/logstash
 
 WORKDIR ${LOGSTASH_HOME}
 RUN gosu logstash bin/logstash-plugin install logstash-patterns-core
+RUN gosu logstash bin/logstash-plugin update logstash-patterns-core
 RUN gosu logstash bin/logstash-plugin install logstash-input-beats
 
 RUN cd /etc/logstash && \
@@ -15,7 +16,7 @@ RUN apt-get update \
     npm \
     apache2 \
     nano
-RUN npm install -g elasticdump
+RUN npm install -g elasticdump@3.3.3
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 ###Logtrail
