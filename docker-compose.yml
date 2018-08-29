@@ -42,7 +42,6 @@ services:
   nagios:
     build: externals/nagios-docker/
     hostname: nagios
-#    environment:
     ports:
       # expose http port to reach nagios frontend
       - "8080:80"
@@ -50,6 +49,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./externals/nagios-docker/cust-plugins:/opt/Custom-Nagios-Plugins:ro
       - ./externals/nagios-docker/etc:/opt/nagios/etc:ro
+      - ./externals/nagios-docker/etc/htpasswd.users:/opt/nagios/etc/htpasswd.users
       - nagiosdata:/opt/nagios/var
 
 networks:
