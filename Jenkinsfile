@@ -80,7 +80,7 @@ fi
     stage('git clone selenium') {
       steps {
         dir('selenium_test'){	
-            git(url: 'ssh://git@bitbucket.rit.unimaas.nl:7999/ritdev/selenium_tests.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'docker_common')
+            git(url: 'ssh://git@bitbucket.rit.unimaas.nl:7999/ritdev/selenium_tests.git',credentialsId: 'SHH-private-key', branch: 'docker_common')
         }
       }
     }
