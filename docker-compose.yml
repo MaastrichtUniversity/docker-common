@@ -8,7 +8,9 @@ services:
       LOGSPOUT: ignore
     ports:
       - "80:80"
+      - "443:443"
     volumes:
+      - /etc/ssl/certs:/etc/nginx/certs/
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
