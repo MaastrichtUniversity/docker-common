@@ -63,7 +63,7 @@ services:
       RABBITMQ_PASS : password
       TRANSPORT : "stub"
       BCC : "false"
-      MICROSERVICE_PORT : 1234
+      MICROSERVICE_PORT : 80
       DEFAULT_FROM : "DataHub [mailer] <datahub@maastrichtuniversity.nl>"
       SMTP_HOST : "smtp.maastrichtuniversity.nl"
       SMTP_PORT : 25
@@ -72,6 +72,7 @@ services:
       MICROSECONDS_BETWEEN_PULLS : 60000
       LOG_LEVEL_CONSOLE : 'debug'
       LOG_LEVEL_FILE : 'info'
+      LOGSTASH_TAGS: MAILER
       VIRTUAL_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
     restart: on-failure
     volumes:
