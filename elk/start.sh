@@ -178,16 +178,32 @@ cd /tmp
 elasticdump --input=kibana-exported.json --output=http://localhost:9200/.kibana --type=data
 
 # import index templates in elastic
-curl -XPUT 'http://localhost:9200/_template/filebeat' -d@/tmp/filebeat.template.json
-curl -XPUT 'http://localhost:9200/_template/atlassian' -d@/tmp/atlassian.template.json
+echo "importing index templates"
+curl -XPUT 'http://localhost:9200/_template/core' -d@/tmp/template.core.json
+curl -XPUT 'http://localhost:9200/_template/aux' -d@/tmp/template.aux.json
+
+# create dummy indexes (to avoid issues when ceating aliases)
+echo "create dummy indexes"
+#curl -XPUT "http://localhost:9200/filebeat-$(date +'%Y%m%d')-dummy"
+curl -XPUT "http://localhost:9200/core-$(date +'%Y%m%d')-dummy"
+curl -XPUT "http://localhost:9200/aux-$(date +'%Y%m%d')-dummy"
+
+# add aliases for indexes
+echo "adding aliasses for indexes"
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "filebeat-*", "alias" : "core" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "core-*", "alias" : "core" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "aux-*", "alias" : "aux" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "*", "alias" : "all" } } ] }'
 
 # import index patterns in kibana
-curl -XPUT http://localhost:9200/.kibana/index-pattern/filebeat-* -d '{"title" : "filebeat-*", "timeFieldName" : "@timestamp"}'
-curl -XPUT http://localhost:9200/.kibana/index-pattern/atlassian-* -d '{"title" : "atlassian-*", "timeFieldName" : "@timestamp"}'
-curl -XPUT http://localhost:9200/.kibana/index-pattern/* -d '{"title" : "*", "timeFieldName" : "@timestamp"}'
+echo "import index patterns in kibana"
+curl -XPUT 'http://localhost:9200/.kibana/index-pattern/core' -d '{"title" : "core", "timeFieldName" : "@timestamp"}'
+curl -XPUT 'http://localhost:9200/.kibana/index-pattern/aux' -d '{"title" : "aux", "timeFieldName" : "@timestamp"}'
+curl -XPUT 'http://localhost:9200/.kibana/index-pattern/all' -d '{"title" : "all", "timeFieldName" : "@timestamp"}'
 
 # set default pattern in kibana
-curl -XPUT http://localhost:9200/.kibana/config/4.4.1 -d '{"defaultIndex" : "filebeat-*"}'
+echo "set default index patterns in kibana"
+curl -XPUT http://localhost:9200/.kibana/config/4.4.1 -d '{"defaultIndex" : "core"}'
 
 touch $OUTPUT_LOGFILES
 tail -f $OUTPUT_LOGFILES &
