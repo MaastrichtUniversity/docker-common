@@ -47,7 +47,6 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER : user
       RABBITMQ_DEFAULT_PASS : password
-    restart: on-failure
     ports:
       - "8888:15672"
     volumes:
