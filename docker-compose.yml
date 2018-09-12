@@ -51,6 +51,7 @@ services:
       - "8888:15672"
     volumes:
       - /etc/localtime:/etc/localtime:ro
+      - rabbitmq:/var/lib/rabbitmq
   mailer:
     build: externals/dh-mailer
     hostname: mailer
@@ -86,3 +87,5 @@ networks:
     external: true
   oculus_default:
     external: true
+volumes:
+  rabbitmq:
