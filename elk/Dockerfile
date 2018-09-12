@@ -43,6 +43,6 @@ ADD ./start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 ###filebeat template
-ADD ./filebeat.template.json /tmp/filebeat.template.json
+ADD ./*.template.json /tmp/
 
 CMD [ "/usr/local/bin/start.sh" ]

@@ -174,12 +174,20 @@ if [ "$ELASTICSEARCH_START" -ne "1" ] && [ "$LOGSTASH_START" -ne "1" ] \
 fi
 
 
-
-
 cd /tmp
 elasticdump --input=kibana-exported.json --output=http://localhost:9200/.kibana --type=data
-curl -XPUT 'http://localhost:9200/_template/filebeat' -d@/tmp/filebeat.template.json
 
+# import index templates in elastic
+curl -XPUT 'http://localhost:9200/_template/filebeat' -d@/tmp/filebeat.template.json
+curl -XPUT 'http://localhost:9200/_template/atlassian' -d@/tmp/atlassian.template.json
+
+# import index patterns in kibana
+curl -XPUT http://localhost:9200/.kibana/index-pattern/filebeat-* -d '{"title" : "filebeat-*", "timeFieldName" : "@timestamp"}'
+curl -XPUT http://localhost:9200/.kibana/index-pattern/atlassian-* -d '{"title" : "atlassian-*", "timeFieldName" : "@timestamp"}'
+curl -XPUT http://localhost:9200/.kibana/index-pattern/* -d '{"title" : "*", "timeFieldName" : "@timestamp"}'
+
+# set default pattern in kibana
+curl -XPUT http://localhost:9200/.kibana/config/4.4.1 -d '{"defaultIndex" : "filebeat-*"}'
 
 touch $OUTPUT_LOGFILES
 tail -f $OUTPUT_LOGFILES &
