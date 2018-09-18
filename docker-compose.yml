@@ -68,8 +68,9 @@ services:
       SMTP_HOST : "smtp.maastrichtuniversity.nl"
       SMTP_PORT : 25
       TEMPLATES_DIR : "/usr/src/app/templates"
-      PARALLELL_WORKERS : 3
-      MICROSECONDS_BETWEEN_PULLS : 60000
+      # Send 1 message every 1000 milliseconds
+      CHANNEL_PREFETCH : 1
+      MS_BETWEEN_PULLS : 1000
       LOG_LEVEL_CONSOLE : 'debug'
       LOG_LEVEL_FILE : 'info'
       LOGSTASH_TAGS: MAILER
