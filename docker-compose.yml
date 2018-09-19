@@ -49,8 +49,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER : user
       RABBITMQ_DEFAULT_PASS : password
-    ports:
-      - "8888:15672"
+      VIRTUAL_HOST: rabbitmq.${RIT_ENV}.rit.unimaas.nl
+      VIRTUAL_PORT: 15672
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - rabbitmq:/var/lib/rabbitmq
