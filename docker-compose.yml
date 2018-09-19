@@ -28,6 +28,8 @@ services:
     ports:
       # Expose Filebeat-ELK-port that accepts logs from non-Docker services
       - "5044:5044"
+      # Expose Logstash-HTTP-port that accepts logs from non-Docker services
+      - "5001:5001"
     volumes:
       - /etc/localtime:/etc/localtime:ro
   logspout:
