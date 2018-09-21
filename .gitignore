@@ -1,3 +1,2 @@
 .idea
-./nagios/var/
-externals/*
+externals

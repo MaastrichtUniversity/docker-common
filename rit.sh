@@ -69,6 +69,10 @@ if [[ -z $RIT_ENV ]]; then
         RIT_ENV="dev4"
     fi
 
+    if [[ $HOSTNAME == "fhml-srv076" ]]; then
+        RIT_ENV="dev5"
+    fi
+
 fi
 export RIT_ENV
 
