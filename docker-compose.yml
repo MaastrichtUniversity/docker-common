@@ -43,6 +43,18 @@ services:
       DEBUG: "true"
       LOGSPOUT: ignore
     command: "logstash://elk:5000"
+  nagios:
+    build: externals/nagios-docker/
+    hostname: nagios
+    environment:
+      LOGSTASH_TAG: NAGIOS
+      VIRTUAL_HOST: nagios.${RIT_ENV}.rit.unimaas.nl
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./externals/nagios-docker/cust-plugins:/opt/Custom-Nagios-Plugins:ro
+      - ./externals/nagios-docker/etc:/opt/nagios/etc:ro
+      - ./externals/nagios-docker/etc/htpasswd.users:/opt/nagios/etc/htpasswd.users
+      - nagiosdata:/opt/nagios/var
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbitmq
@@ -91,4 +103,5 @@ networks:
   oculus_default:
     external: true
 volumes:
+  nagiosdata:
   rabbitmq:
