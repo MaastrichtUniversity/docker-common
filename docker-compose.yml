@@ -59,6 +59,10 @@ services:
     image: rabbitmq:3-management
     hostname: rabbitmq
     environment:
+      # Note that changing the default username and password through these ENV vars does not work when the named volume 'rabbitmq' already exists.
+      # Username and password are stored in a credentials file somewhere inside the /var/lib/rabbitmq folder (thus within the named volume)
+      # In such cases, changing the username and password can only be achieved by 1) doing it through the rabbitmq management web interface
+      # or 2) by deleting the named volume, updating the ENV vars and recreating the Docker container.
       RABBITMQ_DEFAULT_USER : user
       RABBITMQ_DEFAULT_PASS : password
       VIRTUAL_HOST: rabbitmq.${RIT_ENV}.rit.unimaas.nl
