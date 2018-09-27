@@ -47,7 +47,7 @@ services:
     build: externals/nagios-docker/
     hostname: nagios
     environment:
-      LOGSTASH_TAG: NAGIOS
+      LOGSTASH_TAGS: NAGIOS
       VIRTUAL_HOST: nagios.${RIT_ENV}.rit.unimaas.nl
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -65,6 +65,7 @@ services:
       # or 2) by deleting the named volume, updating the ENV vars and recreating the Docker container.
       RABBITMQ_DEFAULT_USER : user
       RABBITMQ_DEFAULT_PASS : password
+      LOGSTASH_TAGS: RABBITMQ
       VIRTUAL_HOST: rabbitmq.${RIT_ENV}.rit.unimaas.nl
       VIRTUAL_PORT: 15672
     volumes:

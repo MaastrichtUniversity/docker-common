@@ -185,8 +185,8 @@ curl -XPUT 'http://localhost:9200/_template/aux' -d@/tmp/template.aux.json
 # create dummy indexes (to avoid issues when ceating aliases)
 echo "create dummy indexes"
 #curl -XPUT "http://localhost:9200/filebeat-$(date +'%Y%m%d')-dummy"
-curl -XPUT "http://localhost:9200/core-$(date +'%Y%m%d')-dummy"
-curl -XPUT "http://localhost:9200/aux-$(date +'%Y%m%d')-dummy"
+curl -XPUT "http://localhost:9200/core-$(date +'%Y.%m')-dummy"
+curl -XPUT "http://localhost:9200/aux-$(date +'%Y.%m')-dummy"
 
 # add aliases for indexes
 echo "adding aliasses for indexes"
