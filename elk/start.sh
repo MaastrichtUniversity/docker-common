@@ -182,6 +182,7 @@ echo "importing index templates"
 curl -XPUT 'http://localhost:9200/_template/core' -d@/tmp/template.core.json
 curl -XPUT 'http://localhost:9200/_template/aux' -d@/tmp/template.aux.json
 
+
 # create dummy indexes (to avoid issues when ceating aliases)
 echo "create dummy indexes"
 #curl -XPUT "http://localhost:9200/filebeat-$(date +'%Y%m%d')-dummy"
@@ -192,18 +193,19 @@ curl -XPUT "http://localhost:9200/aux-$(date +'%Y.%m')-dummy"
 echo "adding aliasses for indexes"
 curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "filebeat-*", "alias" : "core" } } ] }'
 curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "core-*", "alias" : "core" } } ] }'
-curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "aux-*", "alias" : "aux" } } ] }'
-curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "*", "alias" : "all" } } ] }'
+#curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "aux-*", "alias" : "aux" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "*-*", "alias" : "all" } } ] }'
 
 # import index patterns in kibana
 echo "import index patterns in kibana"
 curl -XPUT 'http://localhost:9200/.kibana/index-pattern/core' -d '{"title" : "core", "timeFieldName" : "@timestamp"}'
-curl -XPUT 'http://localhost:9200/.kibana/index-pattern/aux' -d '{"title" : "aux", "timeFieldName" : "@timestamp"}'
+#curl -XPUT 'http://localhost:9200/.kibana/index-pattern/aux' -d '{"title" : "aux", "timeFieldName" : "@timestamp"}'
+curl -XPUT 'http://localhost:9200/.kibana/index-pattern/aux' -d '{"title" : "aux-*", "timeFieldName" : "@timestamp"}'
 curl -XPUT 'http://localhost:9200/.kibana/index-pattern/all' -d '{"title" : "all", "timeFieldName" : "@timestamp"}'
 
 # set default pattern in kibana
 echo "set default index patterns in kibana"
-curl -XPUT http://localhost:9200/.kibana/config/4.4.1 -d '{"defaultIndex" : "core"}'
+curl -XPUT http://localhost:9200/.kibana/config/5.2.0 -d '{"defaultIndex" : "core", "discover:sampleSize:" : "10000" }'
 
 touch $OUTPUT_LOGFILES
 tail -f $OUTPUT_LOGFILES &
