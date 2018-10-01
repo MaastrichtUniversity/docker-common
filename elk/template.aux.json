@@ -103,6 +103,10 @@
       }
     }
   },
+  "aliases": {
+    "aux" : {},
+    "all" : {}
+  },
   "order": 0,
   "settings": {
     "index.mapping.total_fields.limit": 10000,
