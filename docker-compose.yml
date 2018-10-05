@@ -83,7 +83,7 @@ services:
       RABBITMQ_HOST : rabbitmq
       RABBITMQ_USER : user
       RABBITMQ_PASS : password
-      TRANSPORT : "smtp"
+      TRANSPORT : "stub"
       BCC : "false"
       MICROSERVICE_PORT : 80
       DEFAULT_FROM : "DataHub [mailer] <datahub@maastrichtuniversity.nl>"
