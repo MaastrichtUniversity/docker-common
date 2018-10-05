@@ -26,6 +26,9 @@ ADD logtrail.json /opt/kibana/plugins/logtrail/logtrail.json
 ADD logtrail_server.js /opt/kibana/plugins/logtrail/server/routes/server.js
 ADD logtrail_app.js /opt/kibana/plugins/logtrail/public/app.js
 
+# Remove existing config files
+RUN rm -r /etc/logstash/conf.d/ && mkdir /etc/logstash/conf.d/
+
 # Add config files
 ADD logstash-config/*.conf /etc/logstash/conf.d/
 
@@ -36,13 +39,13 @@ ADD ./kibana-exported.json /tmp/kibana-exported.json
 ## Reverse proxy for default site with password
 ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
 
-EXPOSE 5000 80
+EXPOSE 5000 5001 80
 
 #Create own startup script
 ADD ./start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 ###filebeat template
-ADD ./filebeat.template.json /tmp/filebeat.template.json
+ADD ./template.*.json /tmp/
 
 CMD [ "/usr/local/bin/start.sh" ]

@@ -174,12 +174,38 @@ if [ "$ELASTICSEARCH_START" -ne "1" ] && [ "$LOGSTASH_START" -ne "1" ] \
 fi
 
 
-
-
 cd /tmp
 elasticdump --input=kibana-exported.json --output=http://localhost:9200/.kibana --type=data
-curl -XPUT 'http://localhost:9200/_template/filebeat' -d@/tmp/filebeat.template.json
 
+# import index templates in elastic
+echo "importing index templates"
+curl -XPUT 'http://localhost:9200/_template/core' -d@/tmp/template.core.json
+curl -XPUT 'http://localhost:9200/_template/aux' -d@/tmp/template.aux.json
+
+
+# create dummy indexes (to avoid issues when ceating aliases)
+echo "create indexes in case they don't exist (will cause ignorable error if index already exist"
+#curl -XPUT "http://localhost:9200/filebeat-$(date +'%Y%m%d')-dummy"
+curl -XPUT "http://localhost:9200/core-$(date +'%Y.%m')"
+curl -XPUT "http://localhost:9200/aux-$(date +'%Y.%m')"
+
+# add aliases for indexes
+echo "adding aliasses for indexes"
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "filebeat-*", "alias" : "core" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "core-*", "alias" : "core" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "aux-*", "alias" : "aux" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "*-*", "alias" : "all" } } ] }'
+
+# import index patterns in kibana
+echo "import index patterns in kibana"
+curl -XPUT 'http://localhost:9200/.kibana/index-pattern/core' -d '{"title" : "core", "timeFieldName" : "@timestamp"}'
+#curl -XPUT 'http://localhost:9200/.kibana/index-pattern/aux' -d '{"title" : "aux", "timeFieldName" : "@timestamp"}'
+curl -XPUT 'http://localhost:9200/.kibana/index-pattern/aux' -d '{"title" : "aux-*", "timeFieldName" : "@timestamp"}'
+curl -XPUT 'http://localhost:9200/.kibana/index-pattern/all' -d '{"title" : "all", "timeFieldName" : "@timestamp"}'
+
+# set default pattern in kibana
+echo "set default index patterns in kibana"
+curl -XPUT http://localhost:9200/.kibana/config/5.2.0 -d '{"defaultIndex" : "core", "discover:sampleSize:" : "10000" }'
 
 touch $OUTPUT_LOGFILES
 tail -f $OUTPUT_LOGFILES &
