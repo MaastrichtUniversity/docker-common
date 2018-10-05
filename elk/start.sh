@@ -193,7 +193,7 @@ curl -XPUT "http://localhost:9200/aux-$(date +'%Y.%m')"
 echo "adding aliasses for indexes"
 curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "filebeat-*", "alias" : "core" } } ] }'
 curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "core-*", "alias" : "core" } } ] }'
-#curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "aux-*", "alias" : "aux" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "aux-*", "alias" : "aux" } } ] }'
 curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "*-*", "alias" : "all" } } ] }'
 
 # import index patterns in kibana

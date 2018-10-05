@@ -47,6 +47,9 @@ services:
     build: externals/nagios-docker/
     hostname: nagios
     environment:
+      MAILER_MICROSERVICE_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
+      MAILER_MICROSERVICE_USER: user
+      MAILER_MICROSERVICE_PASS: password
       LOGSTASH_TAGS: NAGIOS
       VIRTUAL_HOST: nagios.${RIT_ENV}.rit.unimaas.nl
     volumes:
@@ -80,7 +83,7 @@ services:
       RABBITMQ_HOST : rabbitmq
       RABBITMQ_USER : user
       RABBITMQ_PASS : password
-      TRANSPORT : "stub"
+      TRANSPORT : "smtp"
       BCC : "false"
       MICROSERVICE_PORT : 80
       DEFAULT_FROM : "DataHub [mailer] <datahub@maastrichtuniversity.nl>"
@@ -91,10 +94,9 @@ services:
       CHANNEL_PREFETCH : 1
       MS_BETWEEN_PULLS : 1000
       LOG_LEVEL_CONSOLE : 'debug'
-      LOG_LEVEL_FILE : 'info'
+      LOG_LEVEL_FILE : 'debug'
       LOGSTASH_TAGS: MAILER
       VIRTUAL_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
-    restart: on-failure
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./externals/dh-mailer/app:/usr/src/app/
