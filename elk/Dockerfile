@@ -41,9 +41,15 @@ ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 5000 5001 80
 
-#Create own startup script
+# Create own startup script
 ADD ./start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
+
+# Create retention script and schedule
+ADD ./retention.sh /etc/cron.monthly/retention.sh
+ADD ./cron_retention /etc/cron.d/cron_retention
+RUN chmod +x /etc/cron.monthly/retention.sh
+
 
 ###filebeat template
 ADD ./template.*.json /tmp/

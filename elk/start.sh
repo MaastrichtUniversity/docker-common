@@ -207,6 +207,11 @@ curl -XPUT 'http://localhost:9200/.kibana/index-pattern/all' -d '{"title" : "all
 echo "set default index patterns in kibana"
 curl -XPUT http://localhost:9200/.kibana/config/5.2.0 -d '{"defaultIndex" : "core", "discover:sampleSize:" : "10000" }'
 
+
+# add logfile for retention script to OUTPUT_LOGFILES and crontab
+OUTPUT_LOGFILES+="/var/log/retention.log /var/log/crontab.log"
+
+
 touch $OUTPUT_LOGFILES
 tail -f $OUTPUT_LOGFILES &
 wait
