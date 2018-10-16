@@ -42,7 +42,11 @@ services:
     environment:
       DEBUG: "true"
       LOGSPOUT: ignore
-    command: "logstash://elk:5000"
+      MULTILINE_ENABLE_DEFAULT: "true"
+      MULTILINE_MATCH: "nonfirst"
+      MULTILINE_PATTERN: '^\s'
+      MULTILINE_FLUSH_AFTER: 500
+    command: "multiline+logstash://elk:5000"
   nagios:
     build: externals/nagios-docker/
     hostname: nagios
