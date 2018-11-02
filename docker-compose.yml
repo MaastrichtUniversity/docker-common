@@ -54,7 +54,7 @@ services:
       MAILER_MICROSERVICE_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
       MAILER_MICROSERVICE_USER: user
       MAILER_MICROSERVICE_PASS: password
-      LOGSTASH_TAGS: NAGIOS
+      LOGSTASH_TAGS: NAGIOS, AUX
       VIRTUAL_HOST: nagios.${RIT_ENV}.rit.unimaas.nl
     volumes:
       - /etc/localtime:/etc/localtime:ro
