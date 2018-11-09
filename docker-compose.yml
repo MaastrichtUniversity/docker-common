@@ -44,7 +44,7 @@ services:
       LOGSPOUT: ignore
       MULTILINE_ENABLE_DEFAULT: "true"
       MULTILINE_MATCH: "nonfirst"
-      MULTILINE_PATTERN: '^\s'
+      MULTILINE_PATTERN: '^(\s|{)'
       MULTILINE_FLUSH_AFTER: 500
     command: "multiline+logstash://elk:5000"
   nagios:
