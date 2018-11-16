@@ -77,6 +77,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
   mailer:
     build: externals/dh-mailer
     hostname: mailer
