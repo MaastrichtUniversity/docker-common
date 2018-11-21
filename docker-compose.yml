@@ -51,6 +51,7 @@ services:
     build: externals/nagios-docker/
     hostname: nagios
     environment:
+      NAGIOS_FQDN: nagios.${RIT_ENV}.rit.unimaas.nl
       MAILER_MICROSERVICE_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
       MAILER_MICROSERVICE_USER: user
       MAILER_MICROSERVICE_PASS: password
