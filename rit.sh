@@ -34,12 +34,7 @@ fi
 env_selector
 
 # Create networks
-if ! docker network inspect corpus_default > /dev/null 2>&1; then
-   docker network create corpus_default
-fi
-if ! docker network inspect oculus_default > /dev/null 2>&1; then
-   docker network create oculus_default
-fi
+create_networks
 
 # Assuming docker-compose is available in the PATH
 log $DBG "$0 [docker-compose \"$@\"]"
