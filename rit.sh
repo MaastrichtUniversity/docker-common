@@ -1,89 +1,42 @@
 #!/usr/bin/env bash
+
+# source library lib-dh.sh
+if [[ -z $DH_ENV_HOME ]]; then
+    DH_ENV_HOME=".."
+    echo "(DH_ENV_HOME not set, using parent folder as default)"
+fi
+. $DH_ENV_HOME/lib-dh.sh
+
+
 # Set the prefix for the project
 COMPOSE_PROJECT_NAME="common"
 export COMPOSE_PROJECT_NAME
 
 set -e
 
-
+# specify externals for this project
 externals="externals/nagios-docker git@github.com:MaastrichtUniversity/nagios-docker.git
 externals/dh-mailer git@github.com:MaastrichtUniversity/dh-mailer.git"
 
+# do the required action in case of externals or exec
 if [[ $1 == "externals" ]]; then
-    mkdir -p externals
-
-    if [[ $2 == "clone" ]]; then
-        # Ignore error during cloning, as we don't care about existing dirs
-        set +e
-        while read -r external; do
-            external=($external)
-            echo -e "\e[32m =============== ${external[0]} ======================\033[0m"
-            git clone ${external[1]} ${external[0]}
-        done <<< "$externals"
-    fi
-
-    if [[ $2 == "status" ]]; then
-        while read -r external; do
-            external=($external)
-            echo -e "\e[32m =============== ${external[0]} ======================\033[0m"
-            git -C ${external[0]} status
-        done <<< "$externals"
-    fi
-
-    if [[ $2 == "pull" ]]; then
-        while read -r external; do
-            external=($external)
-            echo -e "\e[32m =============== ${external[0]} ======================\033[0m"
-            git -C ${external[0]} pull --rebase
-        done <<< "$externals"
-    fi
+    action=$2
+    run_repo_action ${action} "${externals}"
     exit 0
 fi
 
 if [[ $1 == "exec" ]]; then
-    echo "Connect to container instance : ${COMPOSE_PROJECT_NAME}_${2}_1"
-    docker exec -it ${COMPOSE_PROJECT_NAME}_${2}_1 env COLUMNS=$(tput cols) LINES=$(tput lines) /bin/bash
+    run_docker_exec ${COMPOSE_PROJECT_NAME} $2
     exit 0
 fi
 
-if [[ -z $RIT_ENV ]]; then
-    RIT_ENV="local"
-
-    if [[ $HOSTNAME == "fhml-srv018" ]]; then
-        RIT_ENV="tst"
-    fi
-
-    if [[ $HOSTNAME == "fhml-srv019" ]]; then
-        RIT_ENV="dev1"
-    fi
-
-    if [[ $HOSTNAME == "fhml-srv020" ]]; then
-        RIT_ENV="dev2"
-    fi
-
-    if [[ $HOSTNAME == "fhml-srv065" ]]; then
-        RIT_ENV="dev3"
-    fi
-
-    if [[ $HOSTNAME == "fhml-srv073" ]]; then
-        RIT_ENV="dev4"
-    fi
-
-    if [[ $HOSTNAME == "fhml-srv076" ]]; then
-        RIT_ENV="dev5"
-    fi
-
-fi
-export RIT_ENV
+# set RIT_ENV if not set already
+env_selector
 
 # Create networks
-
-if ! docker network inspect corpus_default > /dev/null 2>&1; then
-   docker network create corpus_default
-fi
-if ! docker network inspect oculus_default > /dev/null 2>&1; then
-   docker network create oculus_default
-fi
+create_networks
 
 # Assuming docker-compose is available in the PATH
+log $DBG "$0 [docker-compose \"$@\"]"
 docker-compose "$@"
+
