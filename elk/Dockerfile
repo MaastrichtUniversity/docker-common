@@ -52,9 +52,9 @@ ADD ./start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 # Create retention script and schedule
-ADD ./retention.sh /etc/cron.monthly/retention.sh
+ADD ./retention.sh /opt/scripts/retention.sh
 ADD ./cron_retention /etc/cron.d/cron_retention
-RUN chmod +x /etc/cron.monthly/retention.sh
+RUN chmod 700 /opt/scripts/retention.sh
 
 
 ###filebeat template

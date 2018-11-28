@@ -32,7 +32,7 @@ DBG=9
 
 
 LOGFILE="/var/log/retention.log"
-LOGLEVEL=WRN
+LOGLEVEL=$WRN
 DISPLAY_LOGS=0
 
 ### LOCAL FUNCTONS ############################################################
@@ -83,15 +83,15 @@ function LOG {
     LVL=$1
     TXT=$2
     RET=$3
-    LVLARR=(DUMMY ERROR  WARNING INFO   FINE   FINER  FINEST DEBUG  DEBUG  DEBUG  )
-#echo -e "\e[34m(comparing entry level ($LVL) against current LOGLEVEL ($LOGLEVEL)\e[0m"
+    LVLARR=(DUMMY ERROR WARNING INFO FINE FINER FINEST DEBUG DEBUG DEBUG)
+#echo -e "\e[34m(comparing entry level ($LVL) against current LOGLEVEL ($LOGLEVEL)\e[0m (DISPLAY_LOGS=${DISPLAY_LOGS})"
     # write to logfile
     if [[ ${LVL} -le ${LOGLEVEL} ]];then
         if [[ ${DISPLAY_LOGS} -lt 2 ]];then
-            echo -e "$(date) | ${LVLARR[$LVL]}| ${TXT}" >>${LOGFILE}
+            printf "%s | %-7s | %s\n" "$(date)" "${LVLARR[$LVL]}" "${TXT}" >>$LOGFILE
         fi
         if [[ $DISPLAY_LOGS -gt 0 ]];then
-            echo -e "$(date) | ${LVLARR[$LVL]}| ${TXT}"
+            printf "%s | %-7s | %s\n" "$(date)" "${LVLARR[$LVL]}" "${TXT}"
         fi
     fi
 
@@ -119,12 +119,6 @@ function exec {
 
 
 ### Validate commandline arguments ############################################
-
-# In case the provided logfile is not accessible for writing, write the logs to output
-if [ ! -w "${LOGFILE}" ];then
-    DISPLAY_LOGS=2
-    echo "Cannot write to logfile ${LOGFILE}. Writing to standard out instead."
-fi
 
 # First pass command line args
 ! getopt --test > /dev/null
@@ -209,6 +203,12 @@ if [ -z ${RETMONTHS} ]; then
     syntax "Retention time (-r or --retention-time) is a required parameter!" 1
 fi
 
+# In case the provided logfile is not accessible for writing, write the logs to output
+if [ ! -w "${LOGFILE}" ];then
+    DISPLAY_LOGS=2
+    echo "Cannot write to logfile ${LOGFILE}. Writing to standard out instead."
+fi
+
 
 ### Get current year and month ($YEAR, $MONTH) ################################
 YYYY=$(date +%Y)
@@ -256,7 +256,7 @@ while [ ${MM} -gt 0 ]; do
             let COUNT_OK+=1
         else
             # failure, let's display the error
-            LOG $ERR "\e[31mIndex removal FAILED:\n$(cat ${RESPONSE})\n\e[0m"
+            LOG $ERR "Index removal FAILED:\n$(cat ${RESPONSE})\n"
             let COUNT_ERR+=1
         fi
     else
@@ -273,9 +273,9 @@ done
 
 ### Print summary and exit ####################################################
 LOG $FIN "-----------------------------------------------------------"
-LOG $INF "Summary of removed indices:"
-LOG $INF " - \e[32m${COUNT_OK} removed succesfully\e[0m"
-LOG $INF " - \e[31m${COUNT_ERR} failed\e[0m"
+LOG $INF "Summary of $0:"
+LOG $INF " - ${COUNT_OK} removed succesfully"
+LOG $INF " - ${COUNT_ERR} failed"
 LOG $FIN "==========================================================="
 
 exit 0
