@@ -42,15 +42,20 @@ services:
     environment:
       DEBUG: "true"
       LOGSPOUT: ignore
-    command: "logstash://elk:5000"
+      MULTILINE_ENABLE_DEFAULT: "true"
+      MULTILINE_MATCH: "nonfirst"
+      MULTILINE_PATTERN: '^(\s|{)'
+      MULTILINE_FLUSH_AFTER: 500
+    command: "multiline+logstash://elk:5000"
   nagios:
     build: externals/nagios-docker/
     hostname: nagios
     environment:
+      NAGIOS_FQDN: nagios.${RIT_ENV}.rit.unimaas.nl
       MAILER_MICROSERVICE_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
       MAILER_MICROSERVICE_USER: user
       MAILER_MICROSERVICE_PASS: password
-      LOGSTASH_TAGS: NAGIOS
+      LOGSTASH_TAGS: NAGIOS, AUX
       VIRTUAL_HOST: nagios.${RIT_ENV}.rit.unimaas.nl
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -59,21 +64,21 @@ services:
       - ./externals/nagios-docker/etc/htpasswd.users:/opt/nagios/etc/htpasswd.users
       - nagiosdata:/opt/nagios/var
   rabbitmq:
-    image: rabbitmq:3-management
+    build: rabbitmq/
     hostname: rabbitmq
     environment:
       # Note that changing the default username and password through these ENV vars does not work when the named volume 'rabbitmq' already exists.
       # Username and password are stored in a credentials file somewhere inside the /var/lib/rabbitmq folder (thus within the named volume)
       # In such cases, changing the username and password can only be achieved by 1) doing it through the rabbitmq management web interface
       # or 2) by deleting the named volume, updating the ENV vars and recreating the Docker container.
-      RABBITMQ_DEFAULT_USER : user
-      RABBITMQ_DEFAULT_PASS : password
       LOGSTASH_TAGS: RABBITMQ
       VIRTUAL_HOST: rabbitmq.${RIT_ENV}.rit.unimaas.nl
       VIRTUAL_PORT: 15672
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
   mailer:
     build: externals/dh-mailer
     hostname: mailer

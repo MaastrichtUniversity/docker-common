@@ -26,6 +26,12 @@ ADD logtrail.json /opt/kibana/plugins/logtrail/logtrail.json
 ADD logtrail_server.js /opt/kibana/plugins/logtrail/server/routes/server.js
 ADD logtrail_app.js /opt/kibana/plugins/logtrail/public/app.js
 
+### overwrite nagios patterns with own fork of Elastic logstash-patterns because of missing Nagios patterns
+RUN cd /opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-patterns-core-4.1.2/patterns/        && \
+    curl -O https://raw.githubusercontent.com/MaastrichtUniversity/logstash-patterns-core/master/patterns/nagios && \
+    chmod 644 nagios                                                                            && \
+    chown logstash:logstash nagios
+
 # Remove existing config files
 RUN rm -r /etc/logstash/conf.d/ && mkdir /etc/logstash/conf.d/
 

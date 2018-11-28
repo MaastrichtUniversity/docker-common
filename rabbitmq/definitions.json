@@ -1,0 +1,35 @@
+{
+  "users": [
+    {
+      "name": "user",
+      "password_hash": "6a233mzr5ZH4eOFFaQUqOxO+Z1ur7aHpQLAIW7wRDfRsSOY9",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": "administrator"
+    }
+  ],
+  "permissions":[
+    {
+      "user":"user",
+      "vhost":"/",
+      "configure":".*",
+      "write":".*",
+      "read":".*"
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "datahub.events_tx",
+      "vhost": "/",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ]
+}
