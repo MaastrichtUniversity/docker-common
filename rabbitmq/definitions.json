@@ -5,6 +5,12 @@
       "password_hash": "6a233mzr5ZH4eOFFaQUqOxO+Z1ur7aHpQLAIW7wRDfRsSOY9",
       "hashing_algorithm": "rabbit_password_hashing_sha256",
       "tags": "administrator"
+    },
+    {
+      "name": "nagios",
+      "password_hash": "BxvBJZB3Yp4iytAp001eF5fXa8l6pr+pJ/mc68LPf4xF7lkT",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": "monitoring"
     }
   ],
   "permissions":[
@@ -13,6 +19,13 @@
       "vhost":"/",
       "configure":".*",
       "write":".*",
+      "read":".*"
+    },
+    {
+      "user":"nagios",
+      "vhost":"/",
+      "configure":"^aliveness-test$",
+      "write":"^aliveness-test|amq\.default$",
       "read":".*"
     }
   ],
