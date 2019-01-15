@@ -1,0 +1,18 @@
+# From example_rules/example_frequency.yaml
+es_host: elk
+es_port: 9200
+name: iRODS rule engine heartbeat
+type: flatline
+index: filebeat-*
+num_events: 15
+timeframe:
+    minutes: 15
+filter:
+- term:
+    logtrail: "irods"
+- term:
+    rods_msg: "reServerMain: checking the queue for jobs"
+alert:
+- "slack"
+slack_webhook_url:
+- "https://hooks.slack.com/services/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"

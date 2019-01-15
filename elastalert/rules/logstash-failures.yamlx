@@ -1,0 +1,16 @@
+# From example_rules/example_frequency.yaml
+es_host: elk.prod.rit.unimaas.nl
+es_port: 9200
+name: test rule
+type: frequency
+index: filebeat-*
+num_events: 10
+timeframe:
+    hours: 4
+filter:
+- term:
+    logtrail: "irods"
+alert:
+- "slack"
+slack_webhook_url:
+- "https://hooks.slack.com/services/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"
