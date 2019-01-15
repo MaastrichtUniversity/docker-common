@@ -26,6 +26,15 @@ ADD logtrail.json /opt/kibana/plugins/logtrail/logtrail.json
 ADD logtrail_server.js /opt/kibana/plugins/logtrail/server/routes/server.js
 ADD logtrail_app.js /opt/kibana/plugins/logtrail/public/app.js
 
+### overwrite nagios patterns with own fork of Elastic logstash-patterns because of missing Nagios patterns
+RUN cd /opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-patterns-core-4.1.2/patterns/        && \
+    curl -O https://raw.githubusercontent.com/MaastrichtUniversity/logstash-patterns-core/master/patterns/nagios && \
+    chmod 644 nagios                                                                            && \
+    chown logstash:logstash nagios
+
+# Remove existing config files
+RUN rm -r /etc/logstash/conf.d/ && mkdir /etc/logstash/conf.d/
+
 # Add config files
 ADD logstash-config/*.conf /etc/logstash/conf.d/
 
@@ -36,13 +45,19 @@ ADD ./kibana-exported.json /tmp/kibana-exported.json
 ## Reverse proxy for default site with password
 ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
 
-EXPOSE 5000 80
+EXPOSE 5000 5001 80
 
-#Create own startup script
+# Create own startup script
 ADD ./start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
+# Create retention script and schedule
+ADD ./retention.sh /etc/cron.monthly/retention.sh
+ADD ./cron_retention /etc/cron.d/cron_retention
+RUN chmod +x /etc/cron.monthly/retention.sh
+
+
 ###filebeat template
-ADD ./filebeat.template.json /tmp/filebeat.template.json
+ADD ./template.*.json /tmp/
 
 CMD [ "/usr/local/bin/start.sh" ]
