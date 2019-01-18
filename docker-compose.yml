@@ -116,7 +116,7 @@ services:
       # Send 1 message every 1000 milliseconds
       CHANNEL_PREFETCH : 1
       MS_BETWEEN_PULLS : 1000
-      LOG_LEVEL_CONSOLE : 'debug'
+      LOG_LEVEL_CONSOLE : 'info'
       LOG_LEVEL_FILE : 'debug'
       LOGSTASH_TAGS: MAILER
       VIRTUAL_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
