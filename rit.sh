@@ -16,11 +16,13 @@ set -e
 
 # specify externals for this project
 externals="externals/nagios-docker git@github.com:MaastrichtUniversity/nagios-docker.git
-externals/dh-mailer git@github.com:MaastrichtUniversity/dh-mailer.git"
+externals/dh-mailer git@github.com:MaastrichtUniversity/dh-mailer.git
+externals/elastalert-docker git@github.com:MaastrichtUniversity/elastalert-docker.git
+"
 
 # do the required action in case of externals or exec
 if [[ $1 == "externals" ]]; then
-    action=$2
+    action=${@/$1/}
     run_repo_action ${action} "${externals}"
     exit 0
 fi
