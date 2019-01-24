@@ -244,7 +244,7 @@ while [ ${MM} -gt 0 ]; do
 
     if [[ $(grep 'HTTP/1.1 200 OK' ${RESPONSE}) ]]; then
 
-        # index exist, so let's remove it2Dec1973!MUMC
+        # index exist, so let's remove it
         LOG $INF "Removing index ${INDEX}..."
         RESPONSE=$(mktemp)
         exec "curl -s -XDELETE \"http://${ELK_HOST}:${ELK_PORT}/${INDEX}\" 2>&1 >${RESPONSE}"

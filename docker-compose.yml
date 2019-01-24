@@ -32,6 +32,24 @@ services:
       - "5001:5001"
     volumes:
       - /etc/localtime:/etc/localtime:ro
+  elastalert:
+    build: externals/elastalert-docker/
+    hostname: elastalert
+    environment:
+      SET_CONTAINER_TIMEZONE: "True" #Set to "True" (without quotes) to set the timezone when starting a container. Default is False
+      CONTAINER_TIMEZONE: Europe/Amsterdam
+      ELASTICSEARCH_HOST: elk
+      ELASTICSEARCH_PORT: 9200 #Defaults to 9200.
+      ELASTICSEARCH_USER: elastic
+      ELASTICSEARCH_PASSWORD: foobar
+#      ELASTICSEARCH_TLS - Use HTTPS when connecting to Elasticsearch (True/False). Default is False.
+#      ELASTICSEARCH_TLS_VERIFY - Verify server (Elasticsearch) certificate (True/False). Default is False.
+#      ELASTALERT_INDEX - Name of Elastalert writeback index in Elasticseach. Defaults to elastalert_status.
+    volumes:
+      - elastalertdata:/opt/logs
+      - ./externals/elastalert-docker/config:/opt/config
+      - ./externals/elastalert-docker/rules:/opt/rules
+      - ./externals/elastalert-docker/custom_alerts.py:/opt/elastalert/custom_alerts.py
   logspout:
     build: logspout/
     volumes:
@@ -99,7 +117,7 @@ services:
       # Send 1 message every 1000 milliseconds
       CHANNEL_PREFETCH : 1
       MS_BETWEEN_PULLS : 1000
-      LOG_LEVEL_CONSOLE : 'debug'
+      LOG_LEVEL_CONSOLE : 'info'
       LOG_LEVEL_FILE : 'debug'
       LOGSTASH_TAGS: MAILER
       VIRTUAL_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
@@ -116,5 +134,6 @@ networks:
   oculus_default:
     external: true
 volumes:
+  elastalertdata:
   nagiosdata:
   rabbitmq:
