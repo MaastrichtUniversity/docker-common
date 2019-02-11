@@ -7,6 +7,16 @@ if [[ -z $DH_ENV_HOME ]]; then
 fi
 . $DH_ENV_HOME/lib-dh.sh
 
+# Set logging level based on -v (--verbose) or -vv param
+ARGS="$@ "
+if [[ ${ARGS} = *"-vv "* ]]; then
+   export LOGTRESHOLD=$DBG
+   ARGS="${ARGS/-vv /}"
+elif [[ ${ARGS} = *"--verbose "* ]] || [[ ${ARGS} = *"-v "* ]]; then
+   export LOGTRESHOLD=$INF
+   ARGS="${ARGS/--verbose /}"
+   ARGS="${ARGS/-v /}"
+fi
 
 # Set the prefix for the project
 COMPOSE_PROJECT_NAME="common"
@@ -16,11 +26,12 @@ set -e
 
 # specify externals for this project
 externals="externals/nagios-docker git@github.com:MaastrichtUniversity/nagios-docker.git
+externals/elastalert-docker git@github.com:MaastrichtUniversity/elastalert-docker.git
 externals/dh-mailer git@github.com:MaastrichtUniversity/dh-mailer.git"
 
 # do the required action in case of externals or exec
 if [[ $1 == "externals" ]]; then
-    action=$2
+    action=${ARGS/$1/}
     run_repo_action ${action} "${externals}"
     exit 0
 fi
@@ -37,6 +48,6 @@ env_selector
 create_networks
 
 # Assuming docker-compose is available in the PATH
-log $DBG "$0 [docker-compose \"$@\"]"
-docker-compose "$@"
+log $DBG "$0 [docker-compose \"$ARGS\"]"
+docker-compose $ARGS
 

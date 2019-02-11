@@ -34,7 +34,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
   elastalert:
-    build: elastalert/
+    build: externals/elastalert-docker/
     hostname: elastalert
     environment:
       SET_CONTAINER_TIMEZONE: "True" #Set to "True" (without quotes) to set the timezone when starting a container. Default is False
@@ -48,8 +48,9 @@ services:
 #      ELASTALERT_INDEX - Name of Elastalert writeback index in Elasticseach. Defaults to elastalert_status.
     volumes:
       - elastalertdata:/opt/logs
-      - ./elastalert/config:/opt/config
-      - ./elastalert/rules:/opt/rules
+      - ./externals/elastalert-docker/config:/opt/config
+      - ./externals/elastalert-docker/rules:/opt/rules
+      - ./externals/elastalert-docker/custom_alerts.py:/opt/elastalert/custom_alerts.py
   logspout:
     build: logspout/
     volumes:
