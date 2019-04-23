@@ -1,4 +1,4 @@
-FROM sebp/elk:520
+FROM sebp/elk:531
 
 ENV LOGSTASH_HOME /opt/logstash
 
@@ -20,7 +20,7 @@ RUN npm install -g elasticdump@3.3.3
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 ###Logtrail
-RUN /opt/kibana/bin/kibana-plugin install https://github.com/sivasamyk/logtrail/releases/download/0.1.8/logtrail-5.2.0-0.1.8.zip
+RUN /opt/kibana/bin/kibana-plugin install https://github.com/sivasamyk/logtrail/releases/download/0.1.11/logtrail-5.3.1-0.1.11.zip
 ADD logtrail.json /opt/kibana/plugins/logtrail/logtrail.json
 ### Bug fix for logtrail https://github.com/sivasamyk/logtrail/issues/20
 ADD logtrail_server.js /opt/kibana/plugins/logtrail/server/routes/server.js
