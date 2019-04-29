@@ -23,8 +23,8 @@ RUN ln -s /usr/bin/nodejs /usr/bin/node
 RUN /opt/kibana/bin/kibana-plugin install https://github.com/sivasamyk/logtrail/releases/download/0.1.11/logtrail-5.3.1-0.1.11.zip
 ADD logtrail.json /opt/kibana/plugins/logtrail/logtrail.json
 ### Bug fix for logtrail https://github.com/sivasamyk/logtrail/issues/20
-ADD logtrail_server.js /opt/kibana/plugins/logtrail/server/routes/server.js
-ADD logtrail_app.js /opt/kibana/plugins/logtrail/public/app.js
+#ADD logtrail_server.js /opt/kibana/plugins/logtrail/server/routes/server.js
+#ADD logtrail_app.js /opt/kibana/plugins/logtrail/public/app.js
 
 ### overwrite nagios patterns with own fork of Elastic logstash-patterns because of missing Nagios patterns
 RUN cd /opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-patterns-core-4.1.2/patterns/        && \

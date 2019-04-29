@@ -240,8 +240,8 @@ curl -XPUT 'http://localhost:9200/.kibana/index-pattern/aux' -d '{"title" : "aux
 curl -XPUT 'http://localhost:9200/.kibana/index-pattern/all' -d '{"title" : "all", "timeFieldName" : "@timestamp"}'
 
 # set default pattern in kibana
-echo "set default index patterns in kibana"
-curl -XPUT http://localhost:9200/.kibana/config/5.2.0 -d '{"defaultIndex" : "core", "discover:sampleSize:" : "10000" }'
+#echo "set default index patterns in kibana"
+#curl -XPUT http://localhost:9200/.kibana/config/5.3.1 -d '{"defaultIndex" : "core", "discover:sampleSize:" : "10000" }'
 
 
 # add logfile for retention script to OUTPUT_LOGFILES and crontab
