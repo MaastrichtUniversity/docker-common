@@ -223,7 +223,7 @@ LOG $FIN "  index-prefix   : ${INDEX_PREFIX}"
 LOG $FIN "  retention-time : ${RETMONTHS} month(s)"
 LOG $INF "Removing indexes in year ${YYYY} up to index '${INDEX_PREFIX}-${YYYY}.${MM}'"
 LOG $FIN "-----------------------------------------------------------"
-exit 0
+
 
 while [ ${MM} -gt 0 ]; do
     # generate index name
