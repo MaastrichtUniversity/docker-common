@@ -31,7 +31,7 @@ FST=6
 DBG=9
 
 
-LOGFILE="/var/log/retention.log"
+LOGFILE="/var/log/retention_$(date +%Y%m%d).log"
 LOGLEVEL=WRN
 DISPLAY_LOGS=0
 
@@ -210,16 +210,11 @@ if [ -z ${RETMONTHS} ]; then
 fi
 
 
-### Get current year and month ($YEAR, $MONTH) ################################
-YYYY=$(date +%Y)
-MM=$(date +%m)
+### Get year and month ($YEAR, $MONTH) of last month to be deleted ############
+let DIFF=${RETMONTHS}+1
+YYYY=$(date +%Y --date="${DIFF} month ago")
+MM=$(date +%m --date="${DIFF} month ago")
 
-### Calculate latest index to be removed ######################################
-let MM=${MM}-${RETMONTHS}-1
-while [ ${MM} -lt 1 ]; do
-    let MM=${MM}+12
-    let YYYY=${YYYY}-1
-done
 
 ### Remove index (and repeat until beginning of that year) ####################
 LOG $FIN "==========================================================="
@@ -228,6 +223,7 @@ LOG $FIN "  index-prefix   : ${INDEX_PREFIX}"
 LOG $FIN "  retention-time : ${RETMONTHS} month(s)"
 LOG $INF "Removing indexes in year ${YYYY} up to index '${INDEX_PREFIX}-${YYYY}.${MM}'"
 LOG $FIN "-----------------------------------------------------------"
+exit 0
 
 while [ ${MM} -gt 0 ]; do
     # generate index name
