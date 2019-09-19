@@ -83,6 +83,12 @@ services:
       - ./externals/nagios-docker/etc:/opt/nagios/etc:ro
       - ./externals/nagios-docker/etc/htpasswd.users:/opt/nagios/etc/htpasswd.users
       - nagiosdata:/opt/nagios/var
+      - ./.pgpass:/opt/nagios/.pgpass:ro
+    networks:
+      - corpus_default
+      - oculus_default
+      - imago_default
+      - default
   rabbitmq:
     build: rabbitmq/
     hostname: rabbitmq
@@ -134,6 +140,8 @@ networks:
   corpus_default:
     external: true
   oculus_default:
+    external: true
+  imago_default:
     external: true
 volumes:
   elastalertdata:
