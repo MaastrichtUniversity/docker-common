@@ -87,7 +87,6 @@ services:
     networks:
       - corpus_default
       - oculus_default
-      - imago_default
       - default
   rabbitmq:
     build: rabbitmq/
@@ -136,59 +135,13 @@ services:
       - oculus_default
       - corpus_default
       - default
-#  pg_backup_xnat:
-#    image: martianrock/pg_backup_rotated
-#    hostname: pg_backup_xnat
-#    environment:
-#      POSTGRES_HOSTNAME: xnat-db
-#      POSTGRES_USER: xnat
-#      POSTGRES_PASSWORD: xnat
-#      CRON_RUN_MINUTE: 49
-#      CRON_RUN_HOUR: 9
-##      WEEKS_TO_KEEP: 5
-##      DAYS_TO_KEEP: 7
-#      DAY_OF_WEEK_TO_KEEP: 1
-#      ENABLE_GLOBALS_BACKUPS: "no"
-##      ENABLE_PLAIN_BACKUPS: "yes"
-#      ENABLE_CUSTOM_BACKUPS: "no"
-##      SCHEMA_ONLU_LIST: ""
-#    volumes:
-#      - /etc/localtime:/etc/localtime:ro
-#      - xnatpgbak:/backups
-#    networks:
-#      - imago_default
-#  pg_backup_icat:
-#    image: martianrock/pg_backup_rotated
-#    hostname: pg_backup_irods
-#    environment:
-#      POSTGRES_HOSTNAME: irods-db
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: foobar
-#      CRON_RUN_MINUTE: 48,49
-#      CRON_RUN_HOUR: 9
-#      DAY_OF_WEEK_TO_KEEP: 1
-#      ENABLE_GLOBALS_BACKUPS: "no"
-#      ENABLE_CUSTOM_BACKUPS: "no"
-#    volumes:
-#      - /etc/localtime:/etc/localtime:ro
-#      - ./pgbaki:/backups
-#    networks:
-#      - corpus_default
 networks:
   corpus_default:
     external: true
   oculus_default:
     external: true
-  imago_default:
-    external: true
 volumes:
   elastalertdata:
   nagiosdata:
   rabbitmq:
-  xnatpgbak:
-#      driver: local
-#      driver_opts:
-#        type: nfs
-#        device: ":/bkp/xnat-dev3"
-#        o: "addr=fhml-srv017.unimaas.nl,vers=3"
 
