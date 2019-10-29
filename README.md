@@ -2,7 +2,6 @@
 
 Common containers for the RIT development environment. These containers are shared amongst ``docker-compose`` projects from:
 * docker-dev
-* docker-oculus
 
 **Note:** Please note that the ``proxy`` container is required to access services from other compose-projects by ``VIRTUAL_HOST`` address.
 
