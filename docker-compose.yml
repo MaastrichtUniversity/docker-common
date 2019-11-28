@@ -16,7 +16,6 @@ services:
       - ./proxy/client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro
     networks:
       - corpus_default
-      - oculus_default
       - default
   elk:
     build: elk/
@@ -86,7 +85,6 @@ services:
       - ./.pgpass:/opt/nagios/.pgpass:ro
     networks:
       - corpus_default
-      - oculus_default
       - default
   rabbitmq:
     build: rabbitmq/
@@ -132,13 +130,10 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./externals/dh-mailer/app:/usr/src/app/
     networks:
-      - oculus_default
       - corpus_default
       - default
 networks:
   corpus_default:
-    external: true
-  oculus_default:
     external: true
 volumes:
   elastalertdata:
