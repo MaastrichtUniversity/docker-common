@@ -10,9 +10,6 @@
 #   Do not attempt to run this script if the ELK services are running (or be
 #   prepared to reap zombie processes).
 
-echo "================================="
-echo "BOOTSTRAP FILE FOR ELK (modified)"
-echo "================================="
 
 ## handle termination gracefully
 
@@ -34,7 +31,7 @@ trap _term SIGTERM
 
 rm -f /var/run/elasticsearch/elasticsearch.pid /var/run/logstash.pid \
   /var/run/kibana5.pid
-
+  
 ####################################
 ### APACHE REVERSE PROXY SECTION ###
 ####################################
@@ -49,17 +46,7 @@ htpasswd -c -db /opt/.htpasswd elastic $ELASTIC_PASSWORD
 ##Make apache owner of the htpasswd file
 chown www-data:www-data /opt/.htpasswd
 
-### Add or replace servername to apache2 config to avoid warning about FQDN at startup of apache
-if [ -z $VIRTUAL_HOST ]; then VIRTUAL_HOST=localhost; fi
-if [ $(grep ServerName /etc/apache2/apache2.conf 2>/dev/null | wc -l) -eq 0 ]; then
-  echo "Adding 'ServerName $VIRTUAL_HOST' to /etc/apache2/apache2.conf"
-  echo "ServerName $VIRTUAL_HOST" >>/etc/apache2/apache2.conf
-else
-  echo "Replacing Servername to 'Servername $VIRTUAL_HOST' in /etc/apache2/apache2.conf"
-  sed -i 's/ServerName .*/ServerName $VIRTUAL_HOST/g' /etc/apache2/apache2.conf
-fi
-
-### apache2 modules enable and server restart
+### apache2 modules enable and server restart 
 a2enmod proxy
 a2enmod proxy_http
 a2enmod proxy_ajp
@@ -73,7 +60,7 @@ a2enmod proxy_html
 service apache2 restart
 
 ####################################
-
+  
 ## initialise list of log files to stream in console (initially empty)
 OUTPUT_LOGFILES=""
 
@@ -222,65 +209,39 @@ if [ "$ELASTICSEARCH_START" -ne "1" ] && [ "$LOGSTASH_START" -ne "1" ] \
   exit 1
 fi
 
-### Configuration of ElasticSearch and Kibana
 
 cd /tmp
-##SKIP## elasticdump --input=kibana-exported.json --output=http://localhost:9200/.kibana --type=data
+elasticdump --input=kibana-exported.json --output=http://localhost:9200/.kibana --type=data
 
 # import index templates in elastic
-echo "
-elasticsearch: importing index templates to"
-curl -H 'Content-Type: application/json' -XPUT 'http://localhost:9200/_template/idx' -d@/tmp/template.index.json
+echo "importing index templates"
+curl -XPUT 'http://localhost:9200/_template/core' -d@/tmp/template.core.json
+curl -XPUT 'http://localhost:9200/_template/aux' -d@/tmp/template.aux.json
 
 
 # create dummy indexes (to avoid issues when ceating aliases)
-echo "
-elasticsearch: create indexes in case they don't exist (will cause ignorable error if index already exist)"
-curl -XPUT "http://localhost:9200/idx-$(date +'%Y.%m')"
+echo "create indexes in case they don't exist (will cause ignorable error if index already exist"
+#curl -XPUT "http://localhost:9200/filebeat-$(date +'%Y%m%d')-dummy"
+curl -XPUT "http://localhost:9200/core-$(date +'%Y.%m')"
+curl -XPUT "http://localhost:9200/aux-$(date +'%Y.%m')"
 
-
-# wait for Kibana to be up (responding to api)
-counter=0
-KI_CONNECT_RETRY=180
-KIBANA_STATUS=""
-while [[ ! *"$KIBANA_STATUS"* =~ "OK" || $counter -gt $KI_CONNECT_RETRY ]]; do
-    echo "waiting for Kibana to be up ($counter/$KI_CONNECT_RETRY)"
-    sleep 1
-    ((counter++))
-    KIBANA_STATUS="$(curl localhost:5601/status -I 2>/dev/null | grep 'HTTP' | awk '{ $1=""; $2=""; print }')"
-#    echo " + kibana status: '${KIBANA_STATUS}'"
-done
-if [[ ! *"$KIBANA_STATUS"* =~ "OK" ]]; then
-    echo "Couln't start Kibanah. Exiting."
-    echo "Kibana log follows below."
-    cat /var/log/elasticsearch/elasticsearch.log
-    exit 1
-fi
-
-## Aliases are added when creating an index (few lines above) from the index template
 # add aliases for indexes
-#echo "
-#elasticsearch: adding aliasses for indexes"
-#curl -H 'Content-Type: application/json' -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : ".*", "alias" : "config" } } ] }'
-curl -H 'Content-Type: application/json' -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "idx-*", "alias" : "all" } } ] }'
-#curl -H 'Content-Type: application/json' -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "idx-*", "alias" : "core", "filter": { "term": { "category" : "core" } } } } ] }'
-#curl -H 'Content-Type: application/json' -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "idx-*", "alias" : "aux", "filter": { "term": { "category" : "aux" } } } } ] }'
-#curl -H 'Content-Type: application/json' -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "idx-*", "alias" : "sys", "filter": { "term": { "category" : "sys" } } } } ] }'
-
+echo "adding aliasses for indexes"
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "filebeat-*", "alias" : "core" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "core-*", "alias" : "core" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "aux-*", "alias" : "aux" } } ] }'
+curl -XPOST 'http://localhost:9200/_aliases' -d '{ "actions" : [ { "add" : { "index" : "*-*", "alias" : "all" } } ] }'
 
 # import index patterns in kibana
-echo ""
-echo "kibana: import index patterns"
-curl -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST 'http://localhost:5601/api/saved_objects/index-pattern/all'  -d '{ "attributes":{ "title":"all", "timeFieldName" : "@timestamp"} }'
-curl -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST 'http://localhost:5601/api/saved_objects/index-pattern/core' -d '{ "attributes":{ "title":"core", "timeFieldName" : "@timestamp"} }'
-curl -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST 'http://localhost:5601/api/saved_objects/index-pattern/aux'  -d '{ "attributes":{ "title":"aux", "timeFieldName" : "@timestamp"} }'
-curl -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST 'http://localhost:5601/api/saved_objects/index-pattern/sys'  -d '{ "attributes":{ "title":"sys", "timeFieldName" : "@timestamp"} }'
-
+echo "import index patterns in kibana"
+curl -XPUT 'http://localhost:9200/.kibana/index-pattern/core' -d '{"title" : "core", "timeFieldName" : "@timestamp"}'
+#curl -XPUT 'http://localhost:9200/.kibana/index-pattern/aux' -d '{"title" : "aux", "timeFieldName" : "@timestamp"}'
+curl -XPUT 'http://localhost:9200/.kibana/index-pattern/aux' -d '{"title" : "aux-*", "timeFieldName" : "@timestamp"}'
+curl -XPUT 'http://localhost:9200/.kibana/index-pattern/all' -d '{"title" : "all", "timeFieldName" : "@timestamp"}'
 
 # set default pattern in kibana
-echo "kibana: set default index patterns in kibana"
-#ToDo: not found out yet how to set the default pattern...
-#curl -H 'Content-Type: application/json' -XPUT http://localhost:9200/.kibana/config/5.3.1 -d '{"defaultIndex" : "core", "discover:sampleSize:" : "10000" }'
+#echo "set default index patterns in kibana"
+#curl -XPUT http://localhost:9200/.kibana/config/5.3.1 -d '{"defaultIndex" : "core", "discover:sampleSize:" : "10000" }'
 
 
 # add logfile for retention script to OUTPUT_LOGFILES and crontab
