@@ -99,8 +99,11 @@
           }
         }
       },
-      "bytes": {
-        "type": "integer"
+      "bytes_read": {
+        "type": "long"
+      },
+      "bytes_written": {
+        "type": "long"
       },
       "category": {
         "type": "keyword",
@@ -136,10 +139,25 @@
           }
         }
       },
+      "clientport": {
+        "type": "integer"
+      },
+      "code": {
+        "type": "integer"
+      },
       "collection": {
         "type": "keyword"
       },
       "cuser": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "destination": {
         "type": "text",
         "fields": {
           "keyword": {
@@ -194,6 +212,24 @@
       },
       "errornr": {
         "type": "integer"
+      },
+      "event_details": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "event_name": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
       },
       "geoip": {
         "properties": {
@@ -311,6 +347,15 @@
           }
         }
       },
+      "http_method": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
       "httpversion": {
         "type": "text",
         "fields": {
@@ -321,6 +366,24 @@
         }
       },
       "ident": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "irods-rule": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "labels": {
         "type": "text",
         "fields": {
           "keyword": {
@@ -351,7 +414,16 @@
         "fields": {
           "keyword": {
             "type": "keyword",
-            "ignore_above": 1024
+            "ignore_above": 256
+          }
+        }
+      },
+      "message_id": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
           }
         }
       },
@@ -404,7 +476,7 @@
         "type": "date"
       },
       "nagios_fixed": {
-        "type": "boolean"
+        "type": "byte"
       },
       "nagios_hostname": {
         "type": "text",
@@ -471,7 +543,37 @@
       "project": {
         "type": "keyword"
       },
+      "protocol": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "proxyip": {
+        "type": "ip",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 32
+          },
+          "text": {
+            "type": "text"
+          }
+        }
+      },
       "puser": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "rawrequest": {
         "type": "text",
         "fields": {
           "keyword": {
@@ -498,6 +600,15 @@
           }
         }
       },
+      "requestid": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
       "response": {
         "type": "integer",
         "fields": {
@@ -507,7 +618,62 @@
           }
         }
       },
+      "response_time": {
+        "type": "integer"
+      },
       "routing_key": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "serverip": {
+        "type": "ip",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 32
+          },
+          "text": {
+            "type": "text"
+          }
+        }
+      },
+      "sessionid": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 32
+          }
+        }
+      },
+      "slow_query" : {
+        "properties" : {
+          "jql" : {
+            "type" : "text",
+            "fields" : {
+              "keyword" : {
+                "type" : "keyword",
+                "ignore_above" : 256
+              }
+            }
+          },
+          "lucene" : {
+            "type" : "text",
+            "fields" : {
+              "keyword" : {
+                "type" : "keyword",
+                "ignore_above" : 256
+              }
+            }
+          }
+        }
+      },
+      "site_id": {
         "type": "text",
         "fields": {
           "keyword": {
@@ -534,6 +700,15 @@
           }
         }
       },
+      "subtype": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
       "tags": {
         "type": "text",
         "fields": {
@@ -552,6 +727,9 @@
           }
         }
       },
+      "tid": {
+        "type": "long"
+      },
       "type": {
         "type": "text",
         "fields": {
@@ -560,6 +738,9 @@
             "ignore_above": 256
           }
         }
+      },
+      "uid": {
+        "type": "integer"
       }
     }
   }

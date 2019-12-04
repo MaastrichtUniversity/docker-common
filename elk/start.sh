@@ -241,11 +241,10 @@ curl -XPUT "http://localhost:9200/idx-$(date +'%Y.%m')"
 
 # wait for Kibana to be up (responding to api)
 counter=0
-KI_CONNECT_RETRY=180
 KIBANA_STATUS=""
-while [[ ! *"$KIBANA_STATUS"* =~ "OK" || $counter -gt $KI_CONNECT_RETRY ]]; do
-    echo "waiting for Kibana to be up ($counter/$KI_CONNECT_RETRY)"
-    sleep 1
+while [[ ! *"$KIBANA_STATUS"* =~ "OK" && $counter -le $ES_CONNECT_RETRY ]]; do
+    echo "waiting for Kibana to be up ($counter/$ES_CONNECT_RETRY)"
+    sleep 3
     ((counter++))
     KIBANA_STATUS="$(curl localhost:5601/status -I 2>/dev/null | grep 'HTTP' | awk '{ $1=""; $2=""; print }')"
 #    echo " + kibana status: '${KIBANA_STATUS}'"

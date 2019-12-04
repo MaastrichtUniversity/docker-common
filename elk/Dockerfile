@@ -42,12 +42,8 @@ RUN cd /opt/logstash/vendor/bundle/jruby/${VER_JRUBY}/gems/logstash-patterns-cor
 ## Remove existing config files
 RUN rm -r /etc/logstash/conf.d/ && mkdir /etc/logstash/conf.d/
 
-# Add config files
-#ADD logstash-config/*.conf /etc/logstash/conf.d/
-
+## Add customized logstash patterns
 ADD ./RIT.pattern ${LOGSTASH_HOME}/patterns/RIT
-ADD ./kibana-exported.json /tmp/kibana-exported.json
-
 
 ### Reverse proxy for default site with password
 ADD ./000-default.conf /etc/apache2/sites-available/000-default.conf
