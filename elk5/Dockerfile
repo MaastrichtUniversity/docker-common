@@ -3,13 +3,13 @@ FROM sebp/elk:531
 ENV LOGSTASH_HOME /opt/logstash
 
 WORKDIR ${LOGSTASH_HOME}
-RUN gosu logstash bin/logstash-plugin install logstash-patterns-core
-RUN gosu logstash bin/logstash-plugin update logstash-patterns-core
-RUN gosu logstash bin/logstash-plugin install logstash-input-beats
+# https://github.com/elastic/logstash/issues/2557
+ENV JRUBY_OPTS "-J-Dhttp.proxyHost=http://proxy.unimaas.nl -J-Dhttp.proxyPort=3128"
+RUN JARS_SKIP='true' gosu logstash bin/logstash-plugin install logstash-patterns-core
+RUN JARS_SKIP='true' gosu logstash bin/logstash-plugin update logstash-patterns-core
+RUN JARS_SKIP='true' gosu logstash bin/logstash-plugin install logstash-input-beats
 
-RUN cd /etc/logstash && \
-    curl -O "http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz" && \
-    gunzip GeoLite2-City.mmdb.gz
+ADD GeoLite2-City.mmdb /etc/logstash/GeoLite2-City.mmdb
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -20,7 +20,9 @@ RUN npm install -g elasticdump@3.3.3
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 ###Logtrail
-RUN /opt/kibana/bin/kibana-plugin install https://github.com/sivasamyk/logtrail/releases/download/0.1.11/logtrail-5.3.1-0.1.11.zip
+# https://github.com/elastic/kibana/issues/5902
+RUN curl -L https://github.com/sivasamyk/logtrail/releases/download/0.1.11/logtrail-5.3.1-0.1.11.zip --output /tmp/logtrail-5.3.1-0.1.11.zip
+RUN /opt/kibana/bin/kibana-plugin install file:///tmp/logtrail-5.3.1-0.1.11.zip
 ADD logtrail.json /opt/kibana/plugins/logtrail/logtrail.json
 ### Bug fix for logtrail https://github.com/sivasamyk/logtrail/issues/20
 #ADD logtrail_server.js /opt/kibana/plugins/logtrail/server/routes/server.js

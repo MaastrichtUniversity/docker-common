@@ -16,9 +16,7 @@ RUN gosu logstash bin/logstash-plugin install logstash-patterns-core
 RUN gosu logstash bin/logstash-plugin update logstash-patterns-core
 RUN gosu logstash bin/logstash-plugin install logstash-input-beats
 
-RUN cd /etc/logstash && \
-    curl -O "http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz" && \
-    gunzip GeoLite2-City.mmdb.gz
+ADD GeoLite2-City.mmdb /etc/logstash/GeoLite2-City.mmdb
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \

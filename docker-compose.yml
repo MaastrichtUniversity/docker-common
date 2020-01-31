@@ -15,8 +15,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./proxy/client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro
     networks:
-      - corpus_default
-      - default
+      default:
+        aliases:
+          - proxy.dh.local
+      corpus_default:
+        aliases:
+          - proxy.dh.local
   elk:
     build: elk/
     hostname: elk
@@ -41,6 +45,13 @@ services:
       - ./elk/elasticsearch.node1.yml:/etc/elasticsearch/elasticsearch.yml
       - ./elk/logstash-config:/etc/logstash/conf.d
       - elastic7data:/var/lib/elasticsearch
+    networks:
+      default:
+        aliases:
+          - elk.dh.local
+      corpus_default:
+        aliases:
+          - elk.dh.local
   elk5:
     build: elk5/
 #    image: sebp/elk:740
@@ -63,6 +74,13 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./elk5/logstash-config:/etc/logstash/conf.d
       - elasticdata:/var/lib/elasticsearch
+    networks:
+      default:
+        aliases:
+          - elk5.dh.local
+      corpus_default:
+        aliases:
+          - elk5.dh.local
   elastalert:
     build: externals/elastalert-docker/
     hostname: elastalert
@@ -82,6 +100,13 @@ services:
       - ./externals/elastalert-docker/config:/opt/config
       - ./externals/elastalert-docker/rules:/opt/rules
       - ./externals/elastalert-docker/custom_alerts.py:/opt/elastalert/custom_alerts.py
+    networks:
+      default:
+        aliases:
+          - elastalert.dh.local
+      corpus_default:
+        aliases:
+          - elastalert.dh.local
   logspout:
     build: logspout/
     volumes:
@@ -97,6 +122,13 @@ services:
       MULTILINE_PATTERN: '^(\s|{>)'
       MULTILINE_FLUSH_AFTER: 1000
     command: "multiline+logstash://elk:5000"
+    networks:
+      default:
+        aliases:
+          - logspout.dh.local
+      corpus_default:
+        aliases:
+          - logspout.dh.local
   nagios:
     build: externals/nagios-docker/
     hostname: nagios
@@ -115,8 +147,12 @@ services:
       - nagiosdata:/opt/nagios/var
       - ./.pgpass:/opt/nagios/.pgpass:ro
     networks:
-      - corpus_default
-      - default
+      default:
+        aliases:
+          - nagios.dh.local
+      corpus_default:
+        aliases:
+          - nagios.dh.local
   rabbitmq:
     build: rabbitmq/
     hostname: rabbitmq
@@ -134,6 +170,13 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      default:
+        aliases:
+          - rabbitmq.dh.local
+      corpus_default:
+        aliases:
+          - rabbitmq.dh.local
   mailer:
     build: externals/dh-mailer
     hostname: mailer
@@ -161,8 +204,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./externals/dh-mailer/app:/usr/src/app/
     networks:
-      - corpus_default
-      - default
+      default:
+        aliases:
+          - mailer.dh.local
+      corpus_default:
+        aliases:
+          - mailer.dh.local
 networks:
   corpus_default:
     external: true
