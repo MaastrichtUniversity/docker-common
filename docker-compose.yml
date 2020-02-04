@@ -183,7 +183,7 @@ services:
     environment:
       HTTP_AUTH_USERNAME : user
       HTTP_AUTH_PASSWORD : password
-      RABBITMQ_HOST : rabbitmq
+      RABBITMQ_HOST : rabbitmq.dh.local
       RABBITMQ_USER : user
       RABBITMQ_PASS : password
       TRANSPORT : "stub"
