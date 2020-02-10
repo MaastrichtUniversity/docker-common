@@ -7,7 +7,7 @@ a=0
 b=1
 while [ $a -lt 20 ]
 do
-  b=$(nc -z -v -u elk 5000 &> /dev/null; echo $?)
+  b=$(nc -z -v -u elk.dh.local 5000 &> /dev/null; echo $?)
   if [ $b == "0" ]; then
   	echo "server reachable"
    /bin/logspout $1
