@@ -54,15 +54,15 @@
           "hostname" : "logtrail",
           "program": "source",
           "message": "message"
-        },
-        "color_mapping" : {
-          "field" : "log_level",
-          "mapping" : {
-            "ERROR": "#ff3232",
-            "WARN": "#ff7f24",
-            "DEBUG": "#aaaaaa",
-            "TRACE": "#a2cd5a"
-          }
+        }
+      },
+      "color_mapping" : {
+        "field" : "log_level",
+        "mapping" : {
+          "ERROR": "#ff3232",
+          "WARN": "#ff7f24",
+          "DEBUG": "#aaaaaa",
+          "TRACE": "#a2cd5a"
         }
       }
     },
@@ -88,14 +88,15 @@
           "program": "source",
           "message": "message"
         },
-        "color_mapping" : {
-          "field" : "log_level",
-          "mapping" : {
-            "ERROR": "#ff3232",
-            "WARN": "#ff7f24",
-            "DEBUG": "#aaaaaa",
-            "TRACE": "#a2cd5a"
-          }
+        "keyword_suffix" : ""
+      },
+      "color_mapping" : {
+        "field" : "log_level",
+        "mapping" : {
+          "ERROR": "#ff3232",
+          "WARN": "#ff7f24",
+          "DEBUG": "#aaaaaa",
+          "TRACE": "#a2cd5a"
         }
       }
     },
