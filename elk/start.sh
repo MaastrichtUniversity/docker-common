@@ -24,7 +24,7 @@ _term() {
   exit 0
 }
 
-trap _term SIGTERM
+trap _term SIGTERM SIGINT
 
 
 ## remove pidfiles in case previous graceful termination failed
@@ -84,6 +84,12 @@ if [ ! -z "$TZ" ]; then
 fi
 
 
+## run pre-hooks
+if [ -x /usr/local/bin/elk-pre-hooks.sh ]; then
+  . /usr/local/bin/elk-pre-hooks.sh
+fi
+
+
 ## start services as needed
 
 ### crond
@@ -99,12 +105,20 @@ fi
 if [ "$ELASTICSEARCH_START" -ne "1" ]; then
   echo "ELASTICSEARCH_START is set to something different from 1, not starting..."
 else
+  # update permissions of ES data directory
+  chown -R elasticsearch:elasticsearch /var/lib/elasticsearch
+
   # override ES_HEAP_SIZE variable if set
   if [ ! -z "$ES_HEAP_SIZE" ]; then
-    awk -v LINE="-Xmx$ES_HEAP_SIZE" '{ sub(/^.Xmx.*/, LINE); print; }' /opt/elasticsearch/config/jvm.options \
-        > /opt/elasticsearch/config/jvm.options.new && mv /opt/elasticsearch/config/jvm.options.new /opt/elasticsearch/config/jvm.options
-    awk -v LINE="-Xms$ES_HEAP_SIZE" '{ sub(/^.Xms.*/, LINE); print; }' /opt/elasticsearch/config/jvm.options \
-        > /opt/elasticsearch/config/jvm.options.new && mv /opt/elasticsearch/config/jvm.options.new /opt/elasticsearch/config/jvm.options
+    awk -v LINE="-Xmx$ES_HEAP_SIZE" '{ sub(/^.Xmx.*/, LINE); print; }' ${ES_PATH_CONF}/jvm.options \
+        > ${ES_PATH_CONF}/jvm.options.new && mv ${ES_PATH_CONF}/jvm.options.new ${ES_PATH_CONF}/jvm.options
+    awk -v LINE="-Xms$ES_HEAP_SIZE" '{ sub(/^.Xms.*/, LINE); print; }' ${ES_PATH_CONF}/jvm.options \
+        > ${ES_PATH_CONF}/jvm.options.new && mv ${ES_PATH_CONF}/jvm.options.new ${ES_PATH_CONF}/jvm.options
+  fi
+
+  if [ ! -z "$ES_HEAP_DISABLE" ]; then
+    awk -v LINE="#-XX:+HeapDumpOnOutOfMemoryError" '{ sub(/^-XX:\+HeapDumpOnOutOfMemoryError.*/, LINE); print; }' ${ES_PATH_CONF}/jvm.options \
+        > ${ES_PATH_CONF}/jvm.options.new && mv ${ES_PATH_CONF}/jvm.options.new ${ES_PATH_CONF}/jvm.options
   fi
 
   # override ES_JAVA_OPTS variable if set
@@ -139,14 +153,18 @@ else
      ES_CONNECT_RETRY=60
   fi
 
+  if [ -z "$ELASTICSEARCH_URL" ]; then
+    ELASTICSEARCH_URL=${ES_PROTOCOL:-http}://localhost:9200
+  fi
+
   counter=0
-  while [ ! "$(curl localhost:9200 2> /dev/null)" -a $counter -lt $ES_CONNECT_RETRY  ]; do
+  while [ ! "$(curl -k ${ELASTICSEARCH_URL} 2> /dev/null)" -a $counter -lt $ES_CONNECT_RETRY  ]; do
     sleep 1
     ((counter++))
     echo "waiting for Elasticsearch to be up ($counter/$ES_CONNECT_RETRY)"
   done
-  if [ ! "$(curl localhost:9200 2> /dev/null)" ]; then
-    echo "Couln't start Elasticsearch. Exiting."
+  if [ ! "$(curl -k ${ELASTICSEARCH_URL} 2> /dev/null)" ]; then
+    echo "Couldn't start Elasticsearch. Exiting."
     echo "Elasticsearch log follows below."
     cat /var/log/elasticsearch/elasticsearch.log
     exit 1
@@ -157,13 +175,23 @@ else
   while [ -z "$CLUSTER_NAME" -a $counter -lt 30 ]; do
     sleep 1
     ((counter++))
-    CLUSTER_NAME=$(curl localhost:9200/_cat/health?h=cluster 2> /dev/null | tr -d '[:space:]')
+    CLUSTER_NAME=$(curl -k ${ELASTICSEARCH_URL}/_cat/health?h=cluster 2> /dev/null | tr -d '[:space:]')
     echo "Waiting for Elasticsearch cluster to respond ($counter/30)"
   done
+
   if [ -z "$CLUSTER_NAME" ]; then
-    echo "Couln't get name of cluster. Exiting."
-    echo "Elasticsearch log follows below."
+    echo "Couldn't get name of cluster. Exiting."
+    echo "Elasticsearch log follows."
     cat /var/log/elasticsearch/elasticsearch.log
+    exit 1
+  elif [[ "$CLUSTER_NAME" =~ "master_not_discovered_exception" ]]; then
+    # If we got a JSON error back, don't treat it like the literal name of the cluster.
+    # Example of what this error looks like:
+    # [{"error":{"root_cause":[{"type":"master_not_discovered_exception","reason":null}]
+    # We don't know the cluster name, so we'll just glob it.
+    echo "Failed to contact a healthy master in cluster."
+    echo "Elasticsearch logs follow."
+    cat /var/log/elasticsearch/*.log
     exit 1
   fi
   OUTPUT_LOGFILES+="/var/log/elasticsearch/${CLUSTER_NAME}.log "
@@ -180,10 +208,15 @@ if [ "$LOGSTASH_START" -ne "1" ]; then
 else
   # override LS_HEAP_SIZE variable if set
   if [ ! -z "$LS_HEAP_SIZE" ]; then
-    awk -v LINE="-Xmx$LS_HEAP_SIZE" '{ sub(/^.Xmx.*/, LINE); print; }' /opt/logstash/config/jvm.options \
-        > /opt/logstash/config/jvm.options.new && mv /opt/logstash/config/jvm.options.new /opt/logstash/config/jvm.options
-    awk -v LINE="-Xms$LS_HEAP_SIZE" '{ sub(/^.Xms.*/, LINE); print; }' /opt/logstash/config/jvm.options \
-        > /opt/logstash/config/jvm.options.new && mv /opt/logstash/config/jvm.options.new /opt/logstash/config/jvm.options
+    awk -v LINE="-Xmx$LS_HEAP_SIZE" '{ sub(/^.Xmx.*/, LINE); print; }' ${LOGSTASH_PATH_SETTINGS}/jvm.options \
+        > ${LOGSTASH_PATH_SETTINGS}/jvm.options.new && mv ${LOGSTASH_PATH_SETTINGS}/jvm.options.new ${LOGSTASH_PATH_SETTINGS}/jvm.options
+    awk -v LINE="-Xms$LS_HEAP_SIZE" '{ sub(/^.Xms.*/, LINE); print; }' ${LOGSTASH_PATH_SETTINGS}/jvm.options \
+        > ${LOGSTASH_PATH_SETTINGS}/jvm.options.new && mv ${LOGSTASH_PATH_SETTINGS}/jvm.options.new ${LOGSTASH_PATH_SETTINGS}/jvm.options
+  fi
+
+  if [ ! -z "$LS_HEAP_DISABLE" ]; then
+    awk -v LINE="#-XX:+HeapDumpOnOutOfMemoryError" '{ sub(/^-XX:\+HeapDumpOnOutOfMemoryError.*/, LINE); print; }' ${LOGSTASH_PATH_SETTINGS}/jvm.options \
+        > ${LOGSTASH_PATH_SETTINGS}/jvm.options.new && mv ${LOGSTASH_PATH_SETTINGS}/jvm.options.new ${LOGSTASH_PATH_SETTINGS}/jvm.options
   fi
 
   # override LS_OPTS variable if set
@@ -220,6 +253,53 @@ if [ "$ELASTICSEARCH_START" -ne "1" ] && [ "$LOGSTASH_START" -ne "1" ] \
   && [ "$KIBANA_START" -ne "1" ]; then
   >&2 echo "No services started. Exiting."
   exit 1
+fi
+
+
+## run post-hooks
+if [ -x /usr/local/bin/elk-post-hooks.sh ]; then
+  ### if Kibana was started...
+  if [ "$KIBANA_START" -eq "1" ]; then
+
+  ### ... then wait for Kibana to be up first to ensure that .kibana index is
+  ### created before the post-hooks are executed
+    # set number of retries (default: 30, override using KIBANA_CONNECT_RETRY env var)
+    if ! [[ $KIBANA_CONNECT_RETRY =~ $re_is_numeric ]] ; then
+       KIBANA_CONNECT_RETRY=30
+    fi
+
+    if [ -z "$KIBANA_URL" ]; then
+      KIBANA_URL=http://localhost:5601
+    fi
+
+    counter=0
+    while [ ! "$(curl ${KIBANA_URL} 2> /dev/null)" -a $counter -lt $KIBANA_CONNECT_RETRY  ]; do
+      sleep 1
+      ((counter++))
+      echo "waiting for Kibana to be up ($counter/$KIBANA_CONNECT_RETRY)"
+    done
+    if [ ! "$(curl ${KIBANA_URL} 2> /dev/null)" ]; then
+      echo "Couldn't start Kibana. Exiting."
+      echo "Kibana log follows below."
+      cat /var/log/kibana/kibana5.log
+      exit 1
+    fi
+    # wait for Kibana to not only be up but to return 200 OK
+    counter=0
+    while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' ${KIBANA_URL}/api/status)" != "200" && $counter -lt 30 ]]; do
+      sleep 1
+      ((counter++))
+      echo "waiting for Kibana to respond ($counter/30)"
+    done
+    if [[ "$(curl -s -o /dev/null -w ''%{http_code}'' ${KIBANA_URL}/api/status)" != "200" ]]; then
+      echo "Timed out waiting for Kibana to respond. Exiting."
+      echo "Kibana log follows below."
+      cat /var/log/kibana/kibana5.log
+      exit 1
+    fi
+  fi
+
+  . /usr/local/bin/elk-post-hooks.sh
 fi
 
 ### Configuration of ElasticSearch and Kibana

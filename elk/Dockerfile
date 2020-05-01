@@ -1,8 +1,8 @@
-FROM sebp/elk:740
+FROM sebp/elk:761
 
 ENV LOGSTASH_HOME /opt/logstash
 
-ARG VER_ELK=7.4.0
+ARG VER_ELK=7.6.1
 #note: elk version must correspond to the version of the docker-image of sebp/elk!
 ARG VER_ELASTICDUMP=6.14.1
 ARG VER_JRUBY=2.5.0
@@ -27,7 +27,8 @@ RUN apt-get update \
 RUN npm install -g elasticdump@${VER_ELASTICDUMP}
 #
 ###Logtrail
-RUN /opt/kibana/bin/kibana-plugin --allow-root install https://github.com/sivasamyk/logtrail/releases/download/v${VER_LOGTRAIL}/logtrail-${VER_ELK}-${VER_LOGTRAIL}.zip
+RUN cd /opt/kibana && \
+    /opt/kibana/bin/kibana-plugin --allow-root install https://github.com/sivasamyk/logtrail/releases/download/v${VER_LOGTRAIL}/logtrail-${VER_ELK}-${VER_LOGTRAIL}.zip
 
 ADD ./logtrail.json /opt/kibana/plugins/logtrail/logtrail.json
 
