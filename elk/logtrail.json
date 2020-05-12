@@ -28,7 +28,9 @@
         "field" : "log.level",
         "mapping" : {
           "ERROR": "#ff3232",
+          "CRITICAL": "#ff3232",
           "WARN": "#ff7f24",
+          "WARNNING": "#ff7f24",
           "DEBUG": "#aaaaaa",
           "TRACE": "#a2cd5a"
         }
@@ -61,7 +63,9 @@
         "field" : "log.level",
         "mapping" : {
           "ERROR": "#ff3232",
+          "CRITICAL": "#ff3232",
           "WARN": "#ff7f24",
+          "WARNNING": "#ff7f24",
           "DEBUG": "#aaaaaa",
           "TRACE": "#a2cd5a"
         }
@@ -94,7 +98,9 @@
         "field" : "log.level",
         "mapping" : {
           "ERROR": "#ff3232",
+          "CRITICAL": "#ff3232",
           "WARN": "#ff7f24",
+          "WARNNING": "#ff7f24",
           "DEBUG": "#aaaaaa",
           "TRACE": "#a2cd5a"
         }
@@ -127,7 +133,9 @@
         "field" : "log.level",
         "mapping" : {
           "ERROR": "#ff3232",
+          "CRITICAL": "#ff3232",
           "WARN": "#ff7f24",
+          "WARNNING": "#ff7f24",
           "DEBUG": "#aaaaaa",
           "TRACE": "#a2cd5a"
         }
