@@ -265,7 +265,7 @@ if [ -x /usr/local/bin/elk-post-hooks.sh ]; then
   ### created before the post-hooks are executed
     # set number of retries (default: 30, override using KIBANA_CONNECT_RETRY env var)
     if ! [[ $KIBANA_CONNECT_RETRY =~ $re_is_numeric ]] ; then
-       KIBANA_CONNECT_RETRY=30
+       KIBANA_CONNECT_RETRY=200
     fi
 
     if [ -z "$KIBANA_URL" ]; then
@@ -320,12 +320,17 @@ curl -XPUT "http://localhost:9200/idx-$(date +'%Y.%m')"
 
 
 # wait for Kibana to be up (responding to api)
+
+if ! [[ $KIBANA_CONNECT_RETRY =~ $re_is_numeric ]] ; then
+    KIBANA_CONNECT_RETRY=200
+fi
+
 counter=0
 KIBANA_STATUS=""
-while [[ ! *"$KIBANA_STATUS"* =~ "OK" && $counter -le $ES_CONNECT_RETRY ]]; do
-    echo "waiting for Kibana to be up ($counter/$ES_CONNECT_RETRY)"
-    sleep 3
-    ((counter++))
+while [[ ! *"$KIBANA_STATUS"* =~ "OK" && $counter -le $KIBANA_CONNECT_RETRY ]]; do
+    echo "waiting for Kibana to be up ($counter/$KIBANA_CONNECT_RETRY)"
+    sleep 5
+    ((counter+=5))
     KIBANA_STATUS="$(curl localhost:5601/status -I 2>/dev/null | grep 'HTTP' | awk '{ $1=""; $2=""; print }')"
 #    echo " + kibana status: '${KIBANA_STATUS}'"
 done

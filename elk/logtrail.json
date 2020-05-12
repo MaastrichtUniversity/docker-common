@@ -2,6 +2,40 @@
   "index_patterns" : [
     {
       "es": {
+        "default_index": "all",
+        "allow_url_parameter": false
+      },
+      "tail_interval_in_seconds": 10,
+      "es_index_time_offset_in_seconds": 0,
+      "display_timezone": "local",
+      "display_timestamp_format": "MMM DD HH:mm:ss",
+      "max_buckets": 500,
+      "nested_objects" : false,
+      "default_time_range_in_days" : 0,
+      "max_hosts": 100,
+      "max_events_to_keep_in_viewer": 5000,
+      "fields" : {
+        "mapping" : {
+          "timestamp" : "@timestamp",
+          "display_timestamp" : "@timestamp",
+          "hostname" : "logtrail",
+          "program": "log.file.path",
+          "message": "log.original"
+        },
+        "keyword_suffix" : ""
+      },
+      "color_mapping" : {
+        "field" : "log.level",
+        "mapping" : {
+          "ERROR": "#ff3232",
+          "WARN": "#ff7f24",
+          "DEBUG": "#aaaaaa",
+          "TRACE": "#a2cd5a"
+        }
+      }
+    },
+    {
+      "es": {
         "default_index": "core",
         "allow_url_parameter": false
       },
@@ -19,12 +53,12 @@
           "timestamp": "@timestamp",
           "display_timestamp": "@timestamp",
           "hostname": "logtrail",
-          "program": "source",
-          "message": "message"
+          "program": "log.file.path",
+          "message": "log.original"
         }
       },
       "color_mapping" : {
-        "field" : "log_level",
+        "field" : "log.level",
         "mapping" : {
           "ERROR": "#ff3232",
           "WARN": "#ff7f24",
@@ -52,46 +86,12 @@
           "timestamp" : "@timestamp",
           "display_timestamp" : "@timestamp",
           "hostname" : "logtrail",
-          "program": "source",
-          "message": "message"
+          "program": "log.file.path",
+          "message": "log.original"
         }
       },
       "color_mapping" : {
-        "field" : "log_level",
-        "mapping" : {
-          "ERROR": "#ff3232",
-          "WARN": "#ff7f24",
-          "DEBUG": "#aaaaaa",
-          "TRACE": "#a2cd5a"
-        }
-      }
-    },
-    {
-      "es": {
-        "default_index": "all",
-        "allow_url_parameter": false
-      },
-      "tail_interval_in_seconds": 10,
-      "es_index_time_offset_in_seconds": 0,
-      "display_timezone": "local",
-      "display_timestamp_format": "MMM DD HH:mm:ss",
-      "max_buckets": 500,
-      "nested_objects" : false,
-      "default_time_range_in_days" : 0,
-      "max_hosts": 100,
-      "max_events_to_keep_in_viewer": 5000,
-      "fields" : {
-        "mapping" : {
-          "timestamp" : "@timestamp",
-          "display_timestamp" : "@timestamp",
-          "hostname" : "logtrail",
-          "program": "source",
-          "message": "message"
-        },
-        "keyword_suffix" : ""
-      },
-      "color_mapping" : {
-        "field" : "log_level",
+        "field" : "log.level",
         "mapping" : {
           "ERROR": "#ff3232",
           "WARN": "#ff7f24",
@@ -119,12 +119,12 @@
           "timestamp": "@timestamp",
           "display_timestamp": "@timestamp",
           "hostname": "logtrail",
-          "program": "source",
-          "message": "message"
+          "program": "log.file.path",
+          "message": "log.original"
         }
       },
       "color_mapping" : {
-        "field" : "log_level",
+        "field" : "log.level",
         "mapping" : {
           "ERROR": "#ff3232",
           "WARN": "#ff7f24",
