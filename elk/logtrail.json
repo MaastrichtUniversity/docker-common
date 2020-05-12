@@ -30,7 +30,7 @@
           "ERROR": "#ff3232",
           "CRITICAL": "#ff3232",
           "WARN": "#ff7f24",
-          "WARNNING": "#ff7f24",
+          "WARNING": "#ff7f24",
           "DEBUG": "#aaaaaa",
           "TRACE": "#a2cd5a"
         }
@@ -65,7 +65,7 @@
           "ERROR": "#ff3232",
           "CRITICAL": "#ff3232",
           "WARN": "#ff7f24",
-          "WARNNING": "#ff7f24",
+          "WARNING": "#ff7f24",
           "DEBUG": "#aaaaaa",
           "TRACE": "#a2cd5a"
         }
@@ -100,7 +100,7 @@
           "ERROR": "#ff3232",
           "CRITICAL": "#ff3232",
           "WARN": "#ff7f24",
-          "WARNNING": "#ff7f24",
+          "WARNING": "#ff7f24",
           "DEBUG": "#aaaaaa",
           "TRACE": "#a2cd5a"
         }
@@ -135,7 +135,7 @@
           "ERROR": "#ff3232",
           "CRITICAL": "#ff3232",
           "WARN": "#ff7f24",
-          "WARNNING": "#ff7f24",
+          "WARNING": "#ff7f24",
           "DEBUG": "#aaaaaa",
           "TRACE": "#a2cd5a"
         }
