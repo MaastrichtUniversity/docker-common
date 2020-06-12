@@ -35,7 +35,7 @@ services:
 #      - "80:80"
       - "5601:5601"
       # Expose Filebeat-ELK-port that accepts logs from non-Docker services
-#      - "5044:5044"
+      - "5044:5044"
       # Expose Logstash-HTTP-port that accepts logs from non-Docker services
 #      - "5001:5001"
       # expose port for elasticsearch api's
@@ -65,7 +65,7 @@ services:
 #      - "85:80"
       - "5605:5601"
       # Expose Filebeat-ELK-port that accepts logs from non-Docker services
-      - "5044:5044"
+#      - "5044:5044"
       # Expose Logstash-HTTP-port that accepts logs from non-Docker services
       - "5001:5001"
       # expose port for elasticsearch api's
