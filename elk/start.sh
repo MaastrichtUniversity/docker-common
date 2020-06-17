@@ -44,7 +44,7 @@ rm -f /var/run/elasticsearch/elasticsearch.pid /var/run/logstash.pid \
 # OR if access to those ports is regulated by iptables, thereby only allowing trusted log-sending services.
 
 #Create htpassword file
-htpasswd -c -db /opt/.htpasswd elastic $ELASTIC_PASSWORD
+htpasswd -c -b /opt/.htpasswd elastic $ELASTIC_PASSWORD
 
 ##Make apache owner of the htpasswd file
 chown www-data:www-data /opt/.htpasswd
