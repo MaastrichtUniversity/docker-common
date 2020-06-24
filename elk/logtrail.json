@@ -20,7 +20,7 @@
           "display_timestamp" : "@timestamp",
           "hostname" : "logtrail",
           "program": "log.file.path",
-          "message": "log.original"
+          "message": "log.message"
         },
         "keyword_suffix" : ""
       },
@@ -56,7 +56,7 @@
           "display_timestamp": "@timestamp",
           "hostname": "logtrail",
           "program": "log.file.path",
-          "message": "log.original"
+          "message": "log.message"
         }
       },
       "color_mapping" : {
@@ -91,7 +91,7 @@
           "display_timestamp" : "@timestamp",
           "hostname" : "logtrail",
           "program": "log.file.path",
-          "message": "log.original"
+          "message": "log.message"
         }
       },
       "color_mapping" : {
@@ -126,7 +126,7 @@
           "display_timestamp": "@timestamp",
           "hostname": "logtrail",
           "program": "log.file.path",
-          "message": "log.original"
+          "message": "log.message"
         }
       },
       "color_mapping" : {
