@@ -1,0 +1,33 @@
+version: '2'
+services:
+  nagios:
+    build: externals/nagios-docker/
+    hostname: nagios
+    environment:
+      NAGIOS_FQDN: nagios.${RIT_ENV}.rit.unimaas.nl
+      MAILER_MICROSERVICE_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
+      MAILER_MICROSERVICE_USER: user
+      MAILER_MICROSERVICE_PASS: password
+      LOGSTASH_TAGS: NAGIOS, AUX
+      VIRTUAL_HOST: nagios.${RIT_ENV}.rit.unimaas.nl
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./externals/nagios-docker/cust-plugins:/opt/Custom-Nagios-Plugins:ro
+      - ./externals/nagios-docker/etc:/opt/nagios/etc:ro
+      - ./externals/nagios-docker/etc/htpasswd.users:/opt/nagios/etc/htpasswd.users
+      - nagiosdata:/opt/nagios/var
+      - ./.pgpass:/opt/nagios/.pgpass:ro
+    networks:
+      default:
+        aliases:
+          - nagios.dh.local
+      corpus_default:
+        aliases:
+          - nagios.dh.local
+
+networks:
+  corpus_default:
+    external: true
+
+volumes:
+  nagiosdata:
