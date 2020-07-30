@@ -34,6 +34,12 @@ Therefore, you need to obtain the database manually and place it in the `elk/` a
 ./rit.sh -f nagios-docker-compose.yml up
 ```
 
+# Run the elk5 service
+./rit.sh -f elk5-docker-compose.yml build
+./rit.sh -f elk5-docker-compose.yml down
+./rit.sh -f elk5-docker-compose.yml up
+```
+
 ## Run ``proxy`` container only
 ```
 ./rit.sh build proxy

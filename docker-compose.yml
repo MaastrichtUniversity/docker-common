@@ -52,35 +52,6 @@ services:
       corpus_default:
         aliases:
           - elk.dh.local
-  elk5:
-    build: elk5/
-#    image: sebp/elk:740
-    hostname: elk5
-    environment:
-      ELASTIC_PASSWORD : foobar
-      # otherwise logstash will keep sending its own logs to itself over and over
-      LOGSPOUT: ignore
-      VIRTUAL_HOST: elk.${RIT_ENV}.rit.unimaas.nl
-    ports:
-#      - "85:80"
-      - "5605:5601"
-      # Expose Filebeat-ELK-port that accepts logs from non-Docker services
-#      - "5044:5044"
-      # Expose Logstash-HTTP-port that accepts logs from non-Docker services
-      - "5001:5001"
-      # expose port for elasticsearch api's
-      - "9205:9200"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ./elk5/logstash-config:/etc/logstash/conf.d
-      - elasticdata:/var/lib/elasticsearch
-    networks:
-      default:
-        aliases:
-          - elk5.dh.local
-      corpus_default:
-        aliases:
-          - elk5.dh.local
   elastalert:
     build: externals/elastalert-docker/
     hostname: elastalert
@@ -163,7 +134,7 @@ services:
       RABBITMQ_HOST : rabbitmq.dh.local
       RABBITMQ_USER : user
       RABBITMQ_PASS : password
-      TRANSPORT : "stub"
+      TRANSPORT : "smtp"
       BCC : "false"
       MICROSERVICE_PORT : 80
       DEFAULT_FROM : "DataHub [mailer] <datahub@maastrichtuniversity.nl>"
@@ -193,6 +164,5 @@ networks:
 volumes:
   elastalertdata:
   rabbitmq:
-  elasticdata:
   elastic7data:
 
