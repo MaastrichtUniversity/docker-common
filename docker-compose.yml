@@ -23,6 +23,7 @@ services:
           - proxy.dh.local
   elk:
     build: elk/
+    image: ${ENV_REGISTRY_HOST}/docker-common/${ENV_BRANCH}/elk:${ENV_TAG}
     hostname: elk
     environment:
       NODE_OPTIONS: "--max-old-space-size=3072"
@@ -54,6 +55,7 @@ services:
           - elk.dh.local
   elastalert:
     build: externals/elastalert-docker/
+    image: ${ENV_REGISTRY_HOST}/docker-common/${ENV_BRANCH}/elastalert:${ENV_TAG}
     hostname: elastalert
     environment:
       SET_CONTAINER_TIMEZONE: "True" #Set to "True" (without quotes) to set the timezone when starting a container. Default is False
@@ -80,6 +82,7 @@ services:
           - elastalert.dh.local
   logspout:
     build: logspout/
+    image: ${ENV_REGISTRY_HOST}/docker-common/${ENV_BRANCH}/logspout:${ENV_TAG}
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock
       - /etc/localtime:/etc/localtime:ro
@@ -103,6 +106,7 @@ services:
           - logspout.dh.local
   rabbitmq:
     build: rabbitmq/
+    image: ${ENV_REGISTRY_HOST}/docker-common/${ENV_BRANCH}/rabbitmq:${ENV_TAG}
     hostname: rabbitmq
     environment:
       # Note that changing the default username and password through these ENV vars does not work when the named volume 'rabbitmq' already exists.
@@ -127,6 +131,7 @@ services:
           - rabbitmq.dh.local
   mailer:
     build: externals/dh-mailer
+    image: ${ENV_REGISTRY_HOST}/docker-common/${ENV_BRANCH}/mailer:${ENV_TAG}
     hostname: mailer
     environment:
       HTTP_AUTH_USERNAME : user
