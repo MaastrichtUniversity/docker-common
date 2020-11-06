@@ -22,7 +22,7 @@
           "program": "log.file.path",
           "message": "log.message"
         },
-        "keyword_suffix" : ""
+        "keyword_suffix" : "keyword"
       },
       "color_mapping" : {
         "field" : "log.level",
