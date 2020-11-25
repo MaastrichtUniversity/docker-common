@@ -4265,6 +4265,10 @@
             "ignore_above": 1024,
             "type": "keyword"
           },
+          "message": {
+            "type": "text",
+            "norms": false
+          },
           "offset": {
             "type": "long"
           },
@@ -4411,6 +4415,10 @@
             }
           }
         }
+      },
+      "logtrail": {
+        "type": "keyword",
+        "ignore_above": 1024
       },
       "message": {
         "norms": false,
