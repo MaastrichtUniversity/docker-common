@@ -21,6 +21,11 @@ services:
       - ./proxy/davrods.conf:/etc/nginx/vhost.d/webdav.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/default.conf:/etc/nginx/vhost.d/default
+      # To mock MDR production environment set DJANGO_ENABLE_DEBUG=False in docker-dev
+      # And un-comment next lines to let nginx serve MDR static files
+      # Beware that the static file auto-reload won't work anymore
+#      - ./proxy/default_location:/etc/nginx/vhost.d/default_location
+#      - corpus_static_content:/static
     networks:
       default:
         aliases:
@@ -177,4 +182,5 @@ volumes:
   elastalertdata:
   rabbitmq:
   elastic7data:
-
+  corpus_static_content:
+    external: true
