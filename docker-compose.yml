@@ -17,6 +17,8 @@ services:
       - ./proxy/network_internal.conf:/etc/nginx/network_internal.conf:ro
       - ./proxy/network_external.conf:/etc/nginx/network_external.conf:ro
       - ./proxy/403.html:/usr/share/nginx/html/403.html
+      - ./proxy/502.html:/usr/share/nginx/html/502.html
+      - ./proxy/503.html:/usr/share/nginx/html/503.html
       - ./proxy/pacman.conf:/etc/nginx/vhost.d/pacman.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/davrods.conf:/etc/nginx/vhost.d/webdav.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
