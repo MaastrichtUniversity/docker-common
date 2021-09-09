@@ -27,10 +27,10 @@ RUN apt-get update \
 RUN npm install -g elasticdump@${VER_ELASTICDUMP}
 
 ## overwrite nagios patterns with own fork of Elastic logstash-patterns because of missing Nagios patterns
-RUN cd /opt/logstash/vendor/bundle/jruby/${VER_JRUBY}/gems/logstash-patterns-core-${VER_LOGSTASH_PATTERNS}/patterns/        && \
-    curl -O https://raw.githubusercontent.com/MaastrichtUniversity/logstash-patterns-core/master/patterns/nagios && \
-    chmod 644 nagios                                                                            && \
-    chown logstash:logstash nagios
+#RUN cd /opt/logstash/vendor/bundle/jruby/${VER_JRUBY}/gems/logstash-patterns-core-${VER_LOGSTASH_PATTERNS}/patterns/        && \
+#    curl -O https://raw.githubusercontent.com/MaastrichtUniversity/logstash-patterns-core/master/patterns/nagios && \
+#    chmod 644 nagios                                                                            && \
+#    chown logstash:logstash nagios
 
 ## Remove existing config files
 RUN rm -r /etc/logstash/conf.d/ && mkdir /etc/logstash/conf.d/
