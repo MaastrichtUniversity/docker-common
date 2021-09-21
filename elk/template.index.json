@@ -29,7 +29,7 @@
   "mappings": {
     "_meta": {
       "beat": "filebeat",
-      "version": "7.6.1"
+      "version": "7.13.2"
     },
     "date_detection": false,
     "dynamic_templates": [

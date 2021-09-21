@@ -1,13 +1,13 @@
-FROM sebp/elk:761
+FROM sebp/elk:7.13.2
 
 ENV LOGSTASH_HOME /opt/logstash
 
-ARG VER_ELK=7.6.1
+ARG VER_ELK=7.13.2
 #note: elk version must correspond to the version of the docker-image of sebp/elk!
 ARG VER_ELASTICDUMP=6.14.1
 ARG VER_JRUBY=2.5.0
 ARG VER_LOGTRAIL=0.1.31
-ARG VER_LOGSTASH_PATTERNS=4.1.2
+ARG VER_LOGSTASH_PATTERNS=4.3.1
 #note: commands below install always latest version of patterns-core, variable is
 #      used for path lateron in the dockerfile. So the ver should correspond to latest version on
 
@@ -25,18 +25,12 @@ RUN apt-get update \
     nano
 
 RUN npm install -g elasticdump@${VER_ELASTICDUMP}
-#
-###Logtrail
-RUN cd /opt/kibana && \
-    /opt/kibana/bin/kibana-plugin --allow-root install https://github.com/sivasamyk/logtrail/releases/download/v${VER_LOGTRAIL}/logtrail-${VER_ELK}-${VER_LOGTRAIL}.zip
-
-ADD ./logtrail.json /opt/kibana/plugins/logtrail/logtrail.json
 
 ## overwrite nagios patterns with own fork of Elastic logstash-patterns because of missing Nagios patterns
-RUN cd /opt/logstash/vendor/bundle/jruby/${VER_JRUBY}/gems/logstash-patterns-core-${VER_LOGSTASH_PATTERNS}/patterns/        && \
-    curl -O https://raw.githubusercontent.com/MaastrichtUniversity/logstash-patterns-core/master/patterns/nagios && \
-    chmod 644 nagios                                                                            && \
-    chown logstash:logstash nagios
+#RUN cd /opt/logstash/vendor/bundle/jruby/${VER_JRUBY}/gems/logstash-patterns-core-${VER_LOGSTASH_PATTERNS}/patterns/        && \
+#    curl -O https://raw.githubusercontent.com/MaastrichtUniversity/logstash-patterns-core/master/patterns/nagios && \
+#    chmod 644 nagios                                                                            && \
+#    chown logstash:logstash nagios
 
 ## Remove existing config files
 RUN rm -r /etc/logstash/conf.d/ && mkdir /etc/logstash/conf.d/
