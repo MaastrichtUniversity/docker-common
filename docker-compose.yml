@@ -41,7 +41,7 @@ services:
     hostname: elk
     environment:
       NODE_OPTIONS: "--max-old-space-size=3072"
-      ES_JAVA_OPTS: "-Dls.cgroup.cpuacct.path.override=/ -Dls.cgroup.cpu.path.override=/"
+      ES_JAVA_OPTS: "-Dls.cgroup.cpuacct.path.override=/ -Dls.cgroup.cpu.path.override=/ -Xms1g -Xmx1g"
       ELASTIC_PASSWORD : foobar
       # otherwise logstash will keep sending its own logs to itself over and over
       LOGSPOUT: ignore
