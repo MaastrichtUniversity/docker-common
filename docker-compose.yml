@@ -19,7 +19,9 @@ services:
       - ./proxy/403.html:/usr/share/nginx/html/403.html
       - ./proxy/502.html:/usr/share/nginx/html/502.html
       - ./proxy/503.html:/usr/share/nginx/html/503.html
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
       - ./proxy/pacman.conf:/etc/nginx/vhost.d/pacman.${RIT_ENV}.rit.unimaas.nl
+      - ./proxy/epicpid.conf:/etc/nginx/vhost.d/epicpid.${RIT_ENV}.rit.unimaas.nl_location
       - ./proxy/davrods.conf:/etc/nginx/vhost.d/webdav.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/default.conf:/etc/nginx/vhost.d/default
