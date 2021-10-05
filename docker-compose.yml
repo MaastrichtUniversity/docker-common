@@ -22,6 +22,7 @@ services:
       - ./proxy/pacman.conf:/etc/nginx/vhost.d/pacman.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/davrods.conf:/etc/nginx/vhost.d/webdav.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
+      - ./proxy/metalnx.conf:/etc/nginx/vhost.d/metalnx.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/default.conf:/etc/nginx/vhost.d/default
       # To mock MDR production environment set DJANGO_ENABLE_DEBUG=False in docker-dev
       # And un-comment next lines to let nginx serve MDR static files
