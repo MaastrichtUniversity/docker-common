@@ -21,14 +21,13 @@ services:
       - ./proxy/503.html:/usr/share/nginx/html/503.html
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf
       - ./proxy/pacman.conf:/etc/nginx/vhost.d/pacman.${RIT_ENV}.rit.unimaas.nl
-      - ./proxy/epicpid.conf:/etc/nginx/vhost.d/epicpid.${RIT_ENV}.rit.unimaas.nl_location
       - ./proxy/davrods.conf:/etc/nginx/vhost.d/webdav.${RIT_ENV}.rit.unimaas.nl
-      - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/default.conf:/etc/nginx/vhost.d/default
+      - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
       # To mock MDR production environment set DJANGO_ENABLE_DEBUG=False in docker-dev
-      # And un-comment next lines to let nginx serve MDR static files
+      # And comment line above and un-comment next lines to let nginx serve MDR static files
       # Beware that the static file auto-reload won't work anymore
-#      - ./proxy/default_location:/etc/nginx/vhost.d/default_location
+#      - ./proxy/mdr_prd.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
 #      - corpus_static_content:/static
     networks:
       default:
