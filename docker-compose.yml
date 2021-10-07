@@ -25,7 +25,7 @@ services:
       - ./proxy/default.conf:/etc/nginx/vhost.d/default
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
       # To mock MDR production environment set DJANGO_ENABLE_DEBUG=False in docker-dev
-      # And comment line above and un-comment next lines to let nginx serve MDR static files
+      # And comment MDR line above and un-comment next lines to let nginx serve MDR static files
       # Beware that the static file auto-reload won't work anymore
 #      - ./proxy/mdr_prd.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
 #      - corpus_static_content:/static
