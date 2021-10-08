@@ -13,7 +13,7 @@ sudo sysctl -w vm.max_map_count=262144
 
 ## GeoLite database
 GeoLite2 is used to retrieve geolocation of IP-addresses. Since the end of 2019, Maxmind [has changed its license model](https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-geolite2-databases/) and stopped providing public access.
-Therefore, you need to obtain the database manually and place it in the `elk/` and `elk5/` folders to allow the docker build process to add the file to the container. 
+Therefore, you need to obtain the database manually and place it in the `elk/` folder to allow the docker build process to add the file to the container. 
 
 ## Get external repositories
 
