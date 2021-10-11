@@ -99,7 +99,3 @@ cluster.routing.allocation.disk.threshold_enabled: true
 cluster.routing.allocation.disk.watermark.flood_stage: 2gb
 cluster.routing.allocation.disk.watermark.low: 10gb
 cluster.routing.allocation.disk.watermark.high: 5gb
-
-### Allow old ELK instance as migration source for this ELK instance ###
-reindex.remote.whitelist: elk5.dh.local:9200
-
