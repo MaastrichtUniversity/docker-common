@@ -19,12 +19,12 @@ services:
       - ./proxy/403.html:/usr/share/nginx/html/403.html
       - ./proxy/502.html:/usr/share/nginx/html/502.html
       - ./proxy/503.html:/usr/share/nginx/html/503.html
-      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
       - ./proxy/pacman.conf:/etc/nginx/vhost.d/pacman.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/davrods.conf:/etc/nginx/vhost.d/webdav.${RIT_ENV}.rit.unimaas.nl
-      - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
+      - ./proxy/mdr_prd_location.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
       - ./proxy/metalnx.conf:/etc/nginx/vhost.d/metalnx.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/default.conf:/etc/nginx/vhost.d/default
+      - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
       # To mock MDR production environment set DJANGO_ENABLE_DEBUG=False in docker-dev
       # And comment MDR line above and un-comment next lines to let nginx serve MDR static files
       # Beware that the static file auto-reload won't work anymore
