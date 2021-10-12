@@ -21,10 +21,10 @@ services:
       - ./proxy/503.html:/usr/share/nginx/html/503.html
       - ./proxy/pacman.conf:/etc/nginx/vhost.d/pacman.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/davrods.conf:/etc/nginx/vhost.d/webdav.${RIT_ENV}.rit.unimaas.nl
-      - ./proxy/mdr_location.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
-      - ./proxy/mdr_zones.conf:/etc/nginx/conf.d/mdr_zones.conf
       - ./proxy/metalnx.conf:/etc/nginx/vhost.d/metalnx.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/default.conf:/etc/nginx/vhost.d/default
+      - ./proxy/mdr_location.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
+      - ./proxy/mdr_zones.conf:/etc/nginx/conf.d/mdr_zones.conf
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
       # To mock MDR production environment, follow these steps:
       # 1. Change './proxy/mdr.conf' to './proxy/mdr_prd.conf' in the volume bind above
