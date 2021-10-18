@@ -170,7 +170,7 @@ services:
       LOG_LEVEL_CONSOLE : 'info'
       LOG_LEVEL_FILE : 'debug'
       LOGSTASH_TAGS: MAILER
-      VIRTUAL_HOST: mailer.${RIT_ENV}.rit.unimaas.nl
+      VIRTUAL_HOST: mailer.${RIT_ENV}.dh.unimaas.nl
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./externals/dh-mailer/app:/usr/src/app/
