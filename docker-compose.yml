@@ -6,7 +6,6 @@ services:
       DEFAULT_HOST: pacman.${RIT_ENV}.rit.unimaas.nl
       # otherwise logstash will keep sending its own logs to itself over and over
       LOGSPOUT: ignore
-      SSL_POLICY: Modzilla-Intermediate
     ports:
       - "80:80"
       - "443:443"
