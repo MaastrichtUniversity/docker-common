@@ -41,6 +41,9 @@ ADD ./RIT.pattern ${LOGSTASH_HOME}/patterns/RIT
 ### Reverse proxy for default site with password
 ADD ./000-default.conf /etc/apache2/sites-available/000-default.conf
 
+## Add custom security configuration to hide apache2 version
+ADD ./security.conf /etc/apache2/conf-available/security.conf
+
 EXPOSE 5000 5001 5601 80
 
 ## Create own startup script
@@ -51,7 +54,6 @@ RUN chmod +x /usr/local/bin/start.sh
 ADD ./retention.sh /etc/cron.monthly/retention.sh
 ADD ./cron_retention /etc/cron.d/cron_retention
 RUN chmod +x /etc/cron.monthly/retention.sh
-
 
 ### index templates
 ADD ./template.*.json /tmp/
