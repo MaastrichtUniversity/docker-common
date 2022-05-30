@@ -184,6 +184,18 @@ services:
       corpus_default:
         aliases:
           - mailer.dh.local
+   fail2ban:  
+    image: crazymax/fail2ban:${ENV_FAIL2BAN_VERSION}
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW 
+    volumes:
+      - webdav_logs:/var/log/webdav:ro
+      - upload_logs:/var/log/upload:ro
+      - "./externals/dh-fail2ban/data:/data"
+    env_file:
+      - "./externals/dh-fail2ban/fail2ban.env"
 networks:
   corpus_default:
     external: true
@@ -192,4 +204,8 @@ volumes:
   rabbitmq:
   elastic7data:
   corpus_static_content:
+    external: true
+  corpus_webdav_logs:
+    external: true
+  corpus_upload_logs:
     external: true
