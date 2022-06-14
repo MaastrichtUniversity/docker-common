@@ -62,8 +62,6 @@ services:
       - "9200:9200"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./elk/elasticsearch.node1.yml:/etc/elasticsearch/elasticsearch.yml
-      - ./elk/logstash-config:/etc/logstash/conf.d
       - elastic7data:/var/lib/elasticsearch
     networks:
       default:

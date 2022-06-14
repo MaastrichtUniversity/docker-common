@@ -58,5 +58,8 @@ RUN chmod +x /etc/cron.monthly/retention.sh
 ### index templates
 ADD ./template.*.json /tmp/
 
+## Add logstash configuration
+ADD ./elasticsearch.node1.yml /etc/elasticsearch/elasticsearch.yml
+ADD ./logstash-config /etc/logstash/conf.d
 
 CMD [ "/usr/local/bin/start.sh" ]
