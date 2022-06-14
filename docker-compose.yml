@@ -174,7 +174,6 @@ services:
       VIRTUAL_HOST: mailer.${RIT_ENV}.dh.unimaas.nl
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./externals/dh-mailer/app:/usr/src/app/
     networks:
       default:
         aliases:
