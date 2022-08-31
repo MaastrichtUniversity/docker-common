@@ -54,6 +54,26 @@ env_selector
 # Create networks
 create_networks
 
+# Create volumes
+if [ ! $(docker volume ls --filter name=corpus_static_content --format="true") ] ;
+      then
+       echo "Creating volume corpus_static_content"
+       docker volume create --name=corpus_static_content
+fi
+
+if [ ! $(docker volume ls --filter name=corpus_webdav_logs --format="true") ] ;
+      then
+       echo "Creating volume corpus_webdav_logs"
+       docker volume create --name=corpus_webdav_logs
+fi
+
+if [ ! $(docker volume ls --filter name=corpus_upload_logs --format="true") ] ;
+      then
+       echo "Creating volume corpus_upload_logs"
+       docker volume create --name=corpus_upload_logs
+fi
+
+
 # Assuming docker-compose is available in the PATH
 log $DBG "$0 [docker-compose \"$ARGS\"]"
 docker-compose $ARGS
