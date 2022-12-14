@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   proxy:
     image: jwilder/nginx-proxy:${ENV_TAG_PROXY}
@@ -65,6 +65,7 @@ services:
       - ./elk/elasticsearch.node1.yml:/etc/elasticsearch/elasticsearch.yml
       - ./elk/logstash-config:/etc/logstash/conf.d
       - elastic7data:/var/lib/elasticsearch
+    profiles: ["full"]
     networks:
       default:
         aliases:
@@ -92,6 +93,7 @@ services:
       - ./externals/elastalert-docker/config:/opt/config
       - ./externals/elastalert-docker/rules:/opt/rules
       - ./externals/elastalert-docker/custom_alerts.py:/opt/elastalert/custom_alerts.py
+    profiles: ["full"]
     networks:
       default:
         aliases:
@@ -118,6 +120,7 @@ services:
     command:
       - "multiline+logstash://elk.dh.local:5000"
       - "elk.dh.local"
+    profiles: ["full"]
     networks:
       default:
         aliases:
@@ -143,6 +146,7 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    profiles: ["minimal","full"]
     networks:
       default:
         aliases:
@@ -177,6 +181,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./externals/dh-mailer/app:/usr/src/app/
+    profiles: ["minimal","full"]
     networks:
       default:
         aliases:
@@ -190,6 +195,7 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW 
+    profiles: ["full"]
     volumes:
       - corpus_webdav_logs:/var/log/webdav:ro
       - corpus_upload_logs:/var/log/upload:ro
