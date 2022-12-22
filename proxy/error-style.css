@@ -20,7 +20,7 @@
     background: linear-gradient(90deg, rgb(0, 66, 137) 0%, rgb(0, 133, 202) 100%);
 }
 
-.navbar a {
+.navbar p {
     text-transform: uppercase;
     color: #fff;
     text-decoration: none;
@@ -61,7 +61,7 @@ p {
 .content-wrapper-svg-container {
     display: none;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
 }
 
 .content-wrapper-text-container {
@@ -69,7 +69,7 @@ p {
 }
 
 svg {
-    max-width: 550px;
+    max-width: 450px;
 }
 
 a {
@@ -85,7 +85,7 @@ a:focus {
 
 button {
     color: #1d8cf8;
-    border: 1px solid #1d8cf8;
+    border: none;
     overflow: hidden;
     border-radius: 0.4285rem;
     transition: all 0.35s ease;
@@ -97,12 +97,11 @@ button {
     line-height: 1.35em;
     cursor: pointer;
     width: 100%;
+    max-width: 400px;
 }
 
 button:hover {
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-    transform: translateY(-1px);
-    -webkit-transform: translateY(-1px);
 }
 
 footer {
@@ -112,27 +111,33 @@ footer {
     justify-content: center;
 }
 
+img {
+    max-width: 180px;
+}
+
 @media only screen and (min-width: 1200px) {
     button {
         width: unset;
     }
-    .content-wrapper {
+    .content-wrapper.permission {
         padding: 5vh 10rem;
         display: flex;
     }
-    .content-wrapper-svg-container-small {
+    .content-wrapper-svg-container-small.permission{
         display: none;
     }
-    .navbar a {
+    .navbar p {
         font-size: 0.935rem;
         margin-left: calc(57px + 0.5rem);
     }
 
-    .content-wrapper-text-container {
+    .content-wrapper-text-container.permission {
         width: 60%;
+        text-align: left !important;
+        align-items: unset !important;
     }
 
-    .content-wrapper-svg-container {
+    .content-wrapper-svg-container.permission {
         width: 40%;
         display: flex;
     }
@@ -140,10 +145,14 @@ footer {
     footer {
         flex-direction: row;
     }
+    img {
+        max-width: unset;
+    }
+    
 }
 
     @media only screen and (min-width: 1600px) {
-        .content-wrapper {
+        .content-wrapper.permissions {
             padding: 6vh 12rem;
         }
     }
