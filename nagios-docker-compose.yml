@@ -21,12 +21,12 @@ services:
       default:
         aliases:
           - nagios.dh.local
-      corpus_default:
+      dev_default:
         aliases:
           - nagios.dh.local
 
 networks:
-  corpus_default:
+  dev_default:
     external: true
 
 volumes:
