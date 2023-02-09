@@ -15,7 +15,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/datahub_custom.conf:/etc/nginx/conf.d/datahub_custom.conf:ro
-      - ./proxy/redirect.conf:/etc/nginx/redirect/redirect.conf:ro
       - ./proxy/network_internal.conf:/etc/nginx/network_internal.conf:ro
       - ./proxy/network_external.conf:/etc/nginx/network_external.conf:ro
       - ./proxy/403.html:/usr/share/nginx/html/403.html
