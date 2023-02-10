@@ -12,7 +12,6 @@ services:
       - /etc/ssl/certs:/etc/nginx/certs/
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
-      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
       - ./proxy/datahub_custom.conf:/etc/nginx/conf.d/datahub_custom.conf:ro
       - ./proxy/network_internal.conf:/etc/nginx/network_internal.conf:ro
       - ./proxy/network_external.conf:/etc/nginx/network_external.conf:ro
