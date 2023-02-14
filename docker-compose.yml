@@ -203,18 +203,6 @@ services:
       - "./externals/dh-fail2ban/data:/data"
     env_file:
       - "./externals/dh-fail2ban/fail2ban.env"
-  dh-home:
-    build: externals/dh-home
-    hostname: dh-home
-    environment:
-      VIRTUAL_HOST: home.${RIT_ENV}.dh.unimaas.nl
-    networks:
-      default:
-        aliases:
-          - home.dh.local
-      dev_default:
-        aliases:
-          - home.dh.local
 networks:
   dev_default:
     external: true
