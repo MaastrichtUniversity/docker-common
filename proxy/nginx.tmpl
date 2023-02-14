@@ -142,7 +142,6 @@ server {
         ssl_certificate_key /etc/nginx/certs/default.key;
         include /etc/nginx/vhost.d/default;
 }
-{{ end }}
 
 {{ range $host, $containers := groupByMulti $ "Env.VIRTUAL_HOST" "," }}
 
