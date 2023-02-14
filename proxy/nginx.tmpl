@@ -139,8 +139,8 @@ server {
         ssl_session_timeout 5m;
         ssl_session_cache shared:SSL:50m;
         ssl_session_tickets off;
-        ssl_certificate /etc/nginx/certs/default.crt;
-        ssl_certificate_key /etc/nginx/certs/default.key;
+        ssl_certificate /etc/nginx/certs/{{ $container.Env.VIRTUAL_HOST }}.crt;
+        ssl_certificate_key /etc/nginx/certs/{{ $container.Env.VIRTUAL_HOST }}.key;
         include /etc/nginx/vhost.d/default;
 }
 
