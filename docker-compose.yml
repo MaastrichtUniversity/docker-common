@@ -23,7 +23,7 @@ services:
      # - ./proxy/maintenance/503.html:/usr/share/nginx/html/503.html
      # The lines below will require a MDR SSL certificate to be symlinked to /etc/ssl/certs/default.crt and /etc/ssl/certs/default.key
      # $ ln -s mdr.${RIT_ENV}.dh.unimaas.nl.crt default.crt
-      - ./proxy/nginx.tmpl:/app/nginx.tmpl
+     # - ./proxy/nginx.tmpl:/app/nginx.tmpl
       - ./proxy/pacman.conf:/etc/nginx/vhost.d/pacman.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/davrods.conf:/etc/nginx/vhost.d/webdav.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/davrods_upload.conf:/etc/nginx/vhost.d/upload.${RIT_ENV}.dh.unimaas.nl
