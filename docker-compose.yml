@@ -1,9 +1,8 @@
-version: '2'
+version: '3'
 services:
   proxy:
     image: jwilder/nginx-proxy:${ENV_TAG_PROXY}
     environment:
-      DEFAULT_HOST: mdr.${RIT_ENV}.dh.unimaas.nl
       # otherwise logstash will keep sending its own logs to itself over and over
       LOGSPOUT: ignore
     ports:
@@ -19,6 +18,9 @@ services:
       - ./proxy/403.html:/usr/share/nginx/html/403.html
       - ./proxy/502.html:/usr/share/nginx/html/502.html
       - ./proxy/503.html:/usr/share/nginx/html/503.html
+     # The lines below will require a MDR SSL certificate to be symlinked to /etc/ssl/certs/default.crt and /etc/ssl/certs/default.key
+     # $ ln -s mdr.${RIT_ENV}.dh.unimaas.nl.crt default.crt
+     # - ./proxy/nginx.tmpl:/app/nginx.tmpl
       - ./proxy/pacman.conf:/etc/nginx/vhost.d/pacman.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/davrods.conf:/etc/nginx/vhost.d/webdav.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/davrods_upload.conf:/etc/nginx/vhost.d/upload.${RIT_ENV}.dh.unimaas.nl
@@ -27,17 +29,18 @@ services:
       - ./proxy/mdr_location.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
       - ./proxy/mdr_zones.conf:/etc/nginx/conf.d/mdr_zones.conf
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
+      - ./proxy/helpcenter.conf:/etc/nginx/vhost.d/helpcenter.${RIT_ENV}.dh.unimaas.nl
       # To mock MDR production environment, follow these steps:
       # 1. Change './proxy/mdr.conf' to './proxy/mdr_prd.conf' in the volume bind above
-      # 2. Uncomment the corpus_static_content volume bind below
+      # 2. Uncomment the dev_static_content volume bind below
       # 3. Set 'DJANGO_ENABLE_DEBUG=False' in docker-dev's docker-compose
       # ! Beware that the static file auto-reload won't work anymore as they are then served by the proxy!
-#      - corpus_static_content:/static
+#      - dev_static_content:/static
     networks:
       default:
         aliases:
           - proxy.dh.local
-      corpus_default:
+      dev_default:
         aliases:
           - proxy.dh.local
   elk:
@@ -65,11 +68,12 @@ services:
       - ./elk/elasticsearch.node1.yml:/etc/elasticsearch/elasticsearch.yml
       - ./elk/logstash-config:/etc/logstash/conf.d
       - elastic7data:/var/lib/elasticsearch
+    profiles: ["full"]
     networks:
       default:
         aliases:
           - elk.dh.local
-      corpus_default:
+      dev_default:
         aliases:
           - elk.dh.local
   elastalert:
@@ -92,11 +96,12 @@ services:
       - ./externals/elastalert-docker/config:/opt/config
       - ./externals/elastalert-docker/rules:/opt/rules
       - ./externals/elastalert-docker/custom_alerts.py:/opt/elastalert/custom_alerts.py
+    profiles: ["full"]
     networks:
       default:
         aliases:
           - elastalert.dh.local
-      corpus_default:
+      dev_default:
         aliases:
           - elastalert.dh.local
   logspout:
@@ -118,11 +123,12 @@ services:
     command:
       - "multiline+logstash://elk.dh.local:5000"
       - "elk.dh.local"
+    profiles: ["full"]
     networks:
       default:
         aliases:
           - logspout.dh.local
-      corpus_default:
+      dev_default:
         aliases:
           - logspout.dh.local
   rabbitmq:
@@ -143,11 +149,12 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    profiles: ["minimal","full"]
     networks:
       default:
         aliases:
           - rabbitmq.dh.local
-      corpus_default:
+      dev_default:
         aliases:
           - rabbitmq.dh.local
   mailer:
@@ -177,11 +184,12 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./externals/dh-mailer/app:/usr/src/app/
+    profiles: ["minimal","full"]
     networks:
       default:
         aliases:
           - mailer.dh.local
-      corpus_default:
+      dev_default:
         aliases:
           - mailer.dh.local
   fail2ban:  
@@ -190,22 +198,23 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW 
+    profiles: ["full"]
     volumes:
-      - corpus_webdav_logs:/var/log/webdav:ro
-      - corpus_upload_logs:/var/log/upload:ro
+      - dev_webdav_logs:/var/log/webdav:ro
+      - dev_upload_logs:/var/log/upload:ro
       - "./externals/dh-fail2ban/data:/data"
     env_file:
       - "./externals/dh-fail2ban/fail2ban.env"
 networks:
-  corpus_default:
+  dev_default:
     external: true
 volumes:
   elastalertdata:
   rabbitmq:
   elastic7data:
-  corpus_static_content:
+  dev_static_content:
     external: true
-  corpus_webdav_logs:
+  dev_webdav_logs:
     external: true
-  corpus_upload_logs:
+  dev_upload_logs:
     external: true
