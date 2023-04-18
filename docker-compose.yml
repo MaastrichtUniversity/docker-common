@@ -18,6 +18,9 @@ services:
       - ./proxy/403.html:/usr/share/nginx/html/403.html
       - ./proxy/502.html:/usr/share/nginx/html/502.html
       - ./proxy/503.html:/usr/share/nginx/html/503.html
+     # Comment this line out when we enter maintenance to show the maintenance page
+     # Then recreate the nginx proxy container 
+     # - ./proxy/maintenance/503.html:/usr/share/nginx/html/503.html
      # The lines below will require a MDR SSL certificate to be symlinked to /etc/ssl/certs/default.crt and /etc/ssl/certs/default.key
      # $ ln -s mdr.${RIT_ENV}.dh.unimaas.nl.crt default.crt
      # - ./proxy/nginx.tmpl:/app/nginx.tmpl
