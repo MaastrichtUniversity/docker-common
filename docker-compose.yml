@@ -46,6 +46,8 @@ services:
       dev_default:
         aliases:
           - proxy.dh.local
+          - help.mdr.${RIT_ENV}.dh.unimaas.nl # having this alias lets the mdr-container connect to the help center backend (Only DEV)
+
   elk:
     build: elk/
     image: ${ENV_REGISTRY_HOST}/docker-common/${ENV_BRANCH}/elk:${ENV_TAG}
