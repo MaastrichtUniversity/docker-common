@@ -53,6 +53,7 @@ services:
         aliases:
           - proxy.dh.local
           - help.mdr.${RIT_ENV}.dh.unimaas.nl # having this alias lets the mdr-container connect to the help center backend (Only DEV)
+          - app.mdr.${RIT_ENV}.dh.unimaas.nl # having this alias lets the mdr-container connect to the help center backend (Only DEV)
 
   elk:
     build: elk/
