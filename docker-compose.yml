@@ -33,6 +33,7 @@ services:
       - ./proxy/mdr_zones.conf:/etc/nginx/conf.d/mdr_zones.conf
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/helpcenter.conf:/etc/nginx/vhost.d/helpcenter.${RIT_ENV}.dh.unimaas.nl
+      - ./proxy/helpbackend.conf:/etc/nginx/vhost.d/helpbackend.${RIT_ENV}.dh.unimaas.nl
       # To mock MDR production environment, follow these steps:
       # 1. Change './proxy/mdr.conf' to './proxy/mdr_prd.conf' in the volume bind above
       # 2. Uncomment the dev_static_content volume bind below
