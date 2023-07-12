@@ -52,7 +52,13 @@ fi
 env_selector
 
 # Create networks
-create_networks
+if ! docker network inspect dev_dh_public > /dev/null 2>&1; then
+       docker network create dev_dh_public --subnet "172.22.1.0/24" --label "com.docker.compose.project"="dev" --label "com.docker.compose.network"="dh_public"
+fi
+
+if ! docker network inspect dev_default > /dev/null 2>&1; then
+       docker network create dev_default --subnet "172.21.1.0/24" --label "com.docker.compose.project"="dev" --label "com.docker.compose.network"="default"
+fi
 
 # Create volumes
 if [ ! $(docker volume ls --filter name=dev_static_content --format="true") ] ;

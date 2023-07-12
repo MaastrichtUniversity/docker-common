@@ -50,10 +50,10 @@ services:
         aliases:
           - proxy.dh.local
       dev_default:
+        ipv4_address: 172.21.1.100
         aliases:
           - proxy.dh.local
-          - help.mdr.${RIT_ENV}.dh.unimaas.nl # having this alias lets the mdr-container and irods connect to the help center backend (Only DEV)
-          - app.mdr.${RIT_ENV}.dh.unimaas.nl # having this alias lets the mdr-container connect to the help center backend (Only DEV)
+      dev_dh_public:
 
   elk:
     build: elk/
@@ -218,7 +218,14 @@ services:
     env_file:
       - "./externals/dh-fail2ban/fail2ban.env"
 networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.20.1.0/24"
   dev_default:
+    external: true
+  dev_dh_public:
     external: true
 volumes:
   elastalertdata:
