@@ -217,6 +217,22 @@ services:
       - "./externals/dh-fail2ban/data:/data"
     env_file:
       - "./externals/dh-fail2ban/fail2ban.env"
+  filebeat-public-logs:
+    build:
+      context: public-logs/Docker/
+      dockerfile: Dockerfile
+    image: ${ENV_REGISTRY_HOST}/docker-dev/filebeat-public-logs:${ENV_TAG}
+    volumes:
+          - ./public-logs/:/var/logs/public-containers/ #acc/prd
+    profiles: ["full"]
+    networks:
+      default:
+        aliases:
+          - filebeat-public-logs.dh.local
+      dev_default:
+        aliases:
+          - filebeat-public-logs.dh.local
+
 networks:
   default:
     ipam:
