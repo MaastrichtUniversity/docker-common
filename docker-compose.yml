@@ -29,14 +29,21 @@ services:
       - ./proxy/davrods_upload.conf:/etc/nginx/vhost.d/upload.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/metalnx.conf:/etc/nginx/vhost.d/metalnx.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/default.conf:/etc/nginx/vhost.d/default
-      - ./proxy/mdr_location.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
-      - ./proxy/mdr_zones.conf:/etc/nginx/conf.d/mdr_zones.conf
+      - ./proxy/app_mdr_location.conf:/etc/nginx/vhost.d/app.mdr.${RIT_ENV}.dh.unimaas.nl_location
+      - ./proxy/app_mdr_zones.conf:/etc/nginx/conf.d/app_mdr_zones.conf
+      - ./proxy/app_mdr.conf:/etc/nginx/vhost.d/app.mdr.${RIT_ENV}.dh.unimaas.nl
+      - ./proxy/helpcenter.conf:/etc/nginx/vhost.d/help.mdr.${RIT_ENV}.dh.unimaas.nl
+      - ./proxy/public_zones.conf/:/etc/nginx/conf.d/public_zones.conf
+      - ./proxy/helpcenter_location.conf:/etc/nginx/vhost.d/help.mdr.${RIT_ENV}.dh.unimaas.nl_location
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/helpcenter.conf:/etc/nginx/vhost.d/helpcenter.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/admintools.conf:/etc/nginx/vhost.d/admintools.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/admin_htpasswd:/etc/nginx/htpasswd/admintools.${RIT_ENV}.dh.unimaas.nl
+      - ./proxy/mdr_location.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
+      - ./proxy/dhhome.conf:/etc/nginx/vhost.d/${RIT_ENV}.dh.unimaas.nl
+      - ./proxy/dhhome_location.conf:/etc/nginx/vhost.d/${RIT_ENV}.dh.unimaas.nl_location
       # To mock MDR production environment, follow these steps:
-      # 1. Change './proxy/mdr.conf' to './proxy/mdr_prd.conf' in the volume bind above
+      # 1. Change './proxy/app_mdr.conf' to './proxy/app_mdr_prd.conf' in the volume bind above
       # 2. Uncomment the dev_static_content volume bind below
       # 3. Set 'DJANGO_ENABLE_DEBUG=False' in docker-dev's docker-compose
       # ! Beware that the static file auto-reload won't work anymore as they are then served by the proxy!
@@ -46,8 +53,11 @@ services:
         aliases:
           - proxy.dh.local
       dev_default:
+        ipv4_address: 172.21.1.100
         aliases:
           - proxy.dh.local
+      dev_dh_public:
+
   elk:
     build: elk/
     image: ${ENV_REGISTRY_HOST}/docker-common/${ENV_BRANCH}/elk:${ENV_TAG}
@@ -210,8 +220,31 @@ services:
       - "./externals/dh-fail2ban/data:/data"
     env_file:
       - "./externals/dh-fail2ban/fail2ban.env"
+  filebeat-public-logs:
+    build:
+      context: public-logs/Docker/
+      dockerfile: Dockerfile
+    image: ${ENV_REGISTRY_HOST}/docker-dev/filebeat-public-logs:${ENV_TAG}
+    volumes:
+          - ./public-logs/:/var/logs/public-containers/ #acc/prd
+    profiles: ["full"]
+    networks:
+      default:
+        aliases:
+          - filebeat-public-logs.dh.local
+      dev_default:
+        aliases:
+          - filebeat-public-logs.dh.local
+
 networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.20.1.0/24"
   dev_default:
+    external: true
+  dev_dh_public:
     external: true
 volumes:
   elastalertdata:
