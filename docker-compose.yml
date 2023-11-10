@@ -38,6 +38,7 @@ services:
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/admintools.conf:/etc/nginx/vhost.d/admin.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/admin_htpasswd:/etc/nginx/htpasswd/admin.${RIT_ENV}.dh.unimaas.nl
+      - ./proxy/admin_htpasswd:/etc/nginx/htpasswd/admin-tools-backend.dh.local
       - ./proxy/mdr_location.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
       - ./proxy/dhhome.conf:/etc/nginx/vhost.d/${RIT_ENV}.dh.unimaas.nl
       - ./proxy/dhhome_location.conf:/etc/nginx/vhost.d/${RIT_ENV}.dh.unimaas.nl_location
