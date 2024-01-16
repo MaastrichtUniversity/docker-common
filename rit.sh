@@ -27,7 +27,6 @@ set -e
 # specify externals for this project
 externals="externals/nagios-docker https://github.com/MaastrichtUniversity/nagios-docker.git
 externals/elastalert-docker  https://github.com/MaastrichtUniversity/elastalert-docker.git
-externals/dh-mailer  https://github.com/MaastrichtUniversity/dh-mailer.git
 externals/dh-fail2ban https://github.com/MaastrichtUniversity/dh-fail2ban.git"
 
 # do the required action in case of externals or exec
