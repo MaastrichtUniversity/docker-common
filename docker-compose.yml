@@ -91,6 +91,9 @@ services:
       dev_default:
         aliases:
           - elk.dh.local
+      dev-hdp_hdp-dh-net:
+        aliases:
+          - elk.dh.local
   elastalert:
     build: externals/elastalert-docker/
     image: ${ENV_REGISTRY_HOST}/docker-common/${ENV_BRANCH}/elastalert:${ENV_TAG}
@@ -146,12 +149,15 @@ services:
       dev_default:
         aliases:
           - logspout.dh.local
-  fail2ban:  
+      dev-hdp_hdp-dh-net:
+        aliases:
+          - logspout.dh.local
+  fail2ban:
     image: crazymax/fail2ban:${ENV_FAIL2BAN_VERSION}
     network_mode: "host"
     cap_add:
       - NET_ADMIN
-      - NET_RAW 
+      - NET_RAW
     profiles: ["full"]
     volumes:
       - dev_webdav_logs:/var/log/webdav:ro
@@ -184,6 +190,8 @@ networks:
   dev_default:
     external: true
   dev_dh_public:
+    external: true
+  dev-hdp_hdp-dh-net:
     external: true
 volumes:
   elastalertdata:
