@@ -1,11 +1,15 @@
 # Docker-common
 
-Running elk on docker-health
+Common containers for the RIT development environment. These containers are shared amongst ``docker-compose`` projects from:
+* docker-dev
+
+**Note:** Please note that the ``proxy`` container is required to access services from other compose-projects by ``VIRTUAL_HOST`` address.
+
 
 ## Requirements
 
-### Runtime
-* To prevent this [runtime issue](https://github.com/docker-library/elasticsearch/issues/111), increase maximum memory on the docker-host machine:
+### Runtime configuration
+To prevent this [runtime issue](https://github.com/docker-library/elasticsearch/issues/111), increase maximum memory on the docker-host machine:
 ```
 sudo sysctl -w vm.max_map_count=262144
 ```
@@ -17,40 +21,58 @@ Therefore, you need to obtain the database manually and place it in the `elk/` f
 ### Get lib-dh.sh
 Download `lib-dh.sh` from [dh-env repository](https://github.com/MaastrichtUniversity/dh-env) and place it one level before `docker-common`.
 
-### Add this virtual host entry in your /etc/hosts file
+
+## Run
+```
+# Get external repositories
+./rit.sh externals clone
+
+# Run the main project
+./rit.sh build
+./rit.sh down
+./rit.sh up
+
+# Run the nagios service
+./rit.sh -f nagios-docker-compose.yml build
+./rit.sh -f nagios-docker-compose.yml down
+./rit.sh -f nagios-docker-compose.yml up
+
+# Run the elk5 service
+./rit.sh -f elk5-docker-compose.yml build
+./rit.sh -f elk5-docker-compose.yml down
+./rit.sh -f elk5-docker-compose.yml up
+
+# Run ``proxy`` container only
+./rit.sh build proxy
+./rit.sh up proxy
+```
+
+## Run elk for HDP services
+
+### Extra requirements
+
+* Add this virtual host entry in your `/etc/hosts` file
 ```
 127.0.0.1 elk.local.dh.unimaas.nl
 ```
+* Run the "proxy" container from docker-health: `./rit.sh up -d proxy`
 
-### Run "proxy" container only from docker-health
-```
-# in docker-health
-./rit.sh up -d proxy
-```
 
-**Note:** Please note that the ``proxy`` container is required to access services from other compose-projects by ``VIRTUAL_HOST`` address.
+### Run elk services
 
-## Run elk services
+* In docker-common, build and up the following containers:
 ```
-# in docker-common
 ./rit.sh build elk
 ./rit.sh build logspout
 
 ./rit.sh up -d elk
 ./rit.sh up -d logspout
-
-./rit.sh down
 ```
 
-Open your browser and try [http://elk.local.dh.unimaas.nl](http://elk.local.dh.unimaas.nl) with credentials:
-
+* Open your browser and try [http://elk.local.dh.unimaas.nl](http://elk.local.dh.unimaas.nl) with credentials:
 ```
 ELASTIC_USERNAME: elastic
 ELASTIC_PASSWORD: foobar
 ```
 
-Run code in docker-health to see logs appearing on the elk server:
-```
-# in docker-health
-./rit.sh demo
-```
+* Run code in docker-health such as `./rit.sh demo` to see logs appearing on the elk server.
