@@ -62,11 +62,11 @@ Download `lib-dh.sh` from [dh-env repository](https://github.com/MaastrichtUnive
 
 * In docker-common, build and up the following containers:
 ```
-./rit.sh build logspout
 ./rit.sh build elk
+./rit.sh build logspout
 
-./rit.sh up -d logspout
 ./rit.sh up -d elk
+./rit.sh up -d logspout
 ```
 
 * Open your browser and try [http://elk.local.dh.unimaas.nl](http://elk.local.dh.unimaas.nl) with credentials:
