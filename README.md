@@ -23,7 +23,8 @@ Download `lib-dh.sh` from [dh-env repository](https://github.com/MaastrichtUnive
 
 ### Encryption between filebeat and elk
 
-CA certificates need to be manually stored in folder `elk/certs`
+CA certificates need to be manually stored in folder `elk/certs`.
+The present files are used for development-purposes.
 
 
 ## Run
