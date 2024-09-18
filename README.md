@@ -80,4 +80,4 @@ ELASTIC_USERNAME: elastic
 ELASTIC_PASSWORD: foobar
 ```
 
-* Run code in docker-health such as `./rit.sh demo` to see logs appearing on the elk server.
+* Run code in docker-health such as `./rit.sh zib` to see logs appearing on the elk server.
