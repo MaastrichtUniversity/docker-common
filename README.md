@@ -60,7 +60,7 @@ The present files are used for development-purposes.
 ```
 127.0.0.1 elk.local.dh.unimaas.nl
 ```
-* Run the "proxy" container from docker-health: `./rit.sh up -d proxy`
+* Run the "proxy" container from docker-health: `./dh.sh up -d proxy`
 
 
 ### Run elk services
@@ -80,4 +80,4 @@ ELASTIC_USERNAME: elastic
 ELASTIC_PASSWORD: foobar
 ```
 
-* Run code in docker-health such as `./rit.sh zib` to see logs appearing on the elk server.
+* Run code in docker-health such as `./dh.sh etl` to see logs appearing on the elk server.
