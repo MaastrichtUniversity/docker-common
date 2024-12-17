@@ -5,6 +5,7 @@ services:
     hostname: nagios
     environment:
       NAGIOS_FQDN: nagios.${RIT_ENV}.rit.unimaas.nl
+      NAGIOS_TIMEZONE: Europe/Amsterdam
       MAILER_MICROSERVICE_HOST: mailer.${RIT_ENV}.dh.unimaas.nl
       MAILER_MICROSERVICE_USER: user
       MAILER_MICROSERVICE_PASS: password
