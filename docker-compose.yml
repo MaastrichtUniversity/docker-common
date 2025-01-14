@@ -48,14 +48,11 @@ services:
       # ! Beware that the static file auto-reload won't work anymore as they are then served by the proxy!
 #      - dev_static_content:/static
     networks:
-      default:
-        aliases:
-          - proxy.dh.local
-      dev_default:
+      dh_default:
         ipv4_address: 172.21.1.100
         aliases:
           - proxy.dh.local
-      dev_dh_public:
+      dh_public:
 
   elk:
     build: elk/
@@ -87,7 +84,7 @@ services:
       default:
         aliases:
           - elk.dh.local
-      dev_default:
+      dh_default:
         aliases:
           - elk.dh.local
       dev-hdp_hdp-dh-net:
@@ -118,7 +115,7 @@ services:
       default:
         aliases:
           - elastalert.dh.local
-      dev_default:
+      dh_default:
         aliases:
           - elastalert.dh.local
   logspout:
@@ -145,7 +142,7 @@ services:
       default:
         aliases:
           - logspout.dh.local
-      dev_default:
+      dh_default:
         aliases:
           - logspout.dh.local
       dev-hdp_hdp-dh-net:
@@ -176,19 +173,18 @@ services:
       default:
         aliases:
           - filebeat-public-logs.dh.local
-      dev_default:
+      dh_default:
         aliases:
           - filebeat-public-logs.dh.local
 
 networks:
-  default:
+  dh_default:
     ipam:
       driver: default
       config:
         - subnet: "172.20.1.0/24"
-  dev_default:
     external: true
-  dev_dh_public:
+  dh_public:
     external: true
   dev-hdp_hdp-dh-net:
     external: true
