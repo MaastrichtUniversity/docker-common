@@ -93,6 +93,9 @@ services:
       dev-hdp_hdp-dh-zio-net:
         aliases:
           - elk.dh.local
+      dev-hdp_hdp-dh-envida-net:
+        aliases:
+          - elk.dh.local
   elastalert:
     build: externals/elastalert-docker/
     image: ${ENV_REGISTRY_HOST}/docker-common/elastalert:${ENV_TAG}
@@ -154,6 +157,9 @@ services:
       dev-hdp_hdp-dh-zio-net:
         aliases:
           - logspout.dh.local
+      dev-hdp_hdp-dh-envida-net:
+        aliases:
+          - logspout.dh.local
   fail2ban:
     image: crazymax/fail2ban:${ENV_FAIL2BAN_VERSION}
     network_mode: "host"
@@ -195,6 +201,8 @@ networks:
   dev-hdp_hdp-dh-mumc-net:
     external: true
   dev-hdp_hdp-dh-zio-net:
+    external: true
+  dev-hdp_hdp-dh-envida-net:
     external: true
 volumes:
   elastalertdata:
