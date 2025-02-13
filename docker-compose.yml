@@ -79,7 +79,6 @@ services:
       - ./elk/elasticsearch.node1.yml:/etc/elasticsearch/elasticsearch.yml
       - ./elk/logstash-config:/etc/logstash/conf.d
       - elastic7data:/var/lib/elasticsearch
-      - ./elk/certs:/etc/certs:ro
     profiles: ["full"]
     networks:
       default:

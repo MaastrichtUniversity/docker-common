@@ -21,12 +21,6 @@ Therefore, you need to obtain the database manually and place it in the `elk/` f
 ### Get lib-dh.sh
 Download `lib-dh.sh` from [dh-env repository](https://github.com/MaastrichtUniversity/dh-env) and place it one level before `docker-common`.
 
-### Encryption between filebeat and elk
-
-CA certificates need to be manually stored in folder `elk/certs`.
-The present files are used for development-purposes.
-
-
 ## Run
 ```
 # Get external repositories

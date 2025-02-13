@@ -1,6 +1,5 @@
 .idea
 externals/
-elk/certs/
 .pgpass
 elk/GeoLite2-City.mmdb
 public-logs/**/*.log
