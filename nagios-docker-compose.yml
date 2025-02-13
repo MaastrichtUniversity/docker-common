@@ -1,10 +1,10 @@
-version: '2'
 services:
   nagios:
     build: externals/nagios-docker/
     hostname: nagios
     environment:
       NAGIOS_FQDN: nagios.${RIT_ENV}.rit.unimaas.nl
+      NAGIOS_TIMEZONE: Europe/Amsterdam
       MAILER_MICROSERVICE_HOST: mailer.${RIT_ENV}.dh.unimaas.nl
       MAILER_MICROSERVICE_USER: user
       MAILER_MICROSERVICE_PASS: password
@@ -21,12 +21,12 @@ services:
       default:
         aliases:
           - nagios.dh.local
-      dev_default:
+      dh_default:
         aliases:
           - nagios.dh.local
 
 networks:
-  dev_default:
+  dh_default:
     external: true
 
 volumes:
