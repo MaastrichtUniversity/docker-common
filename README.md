@@ -21,6 +21,11 @@ Therefore, you need to obtain the database manually and place it in the `elk/` f
 ### Get lib-dh.sh
 Download `lib-dh.sh` from [dh-env repository](https://github.com/MaastrichtUniversity/dh-env) and place it one level before `docker-common`.
 
+### Encryption between filebeat and elk
+
+CA certificates need to be manually stored in folder `elk/certs`.
+The present files are used for development-purposes.
+
 
 ## Run
 ```
@@ -55,7 +60,7 @@ Download `lib-dh.sh` from [dh-env repository](https://github.com/MaastrichtUnive
 ```
 127.0.0.1 elk.local.dh.unimaas.nl
 ```
-* Run the "proxy" container from docker-health: `./rit.sh up -d proxy`
+* Run the "proxy" container from docker-health: `./dh.sh up -d proxy`
 
 
 ### Run elk services
@@ -75,4 +80,4 @@ ELASTIC_USERNAME: elastic
 ELASTIC_PASSWORD: foobar
 ```
 
-* Run code in docker-health such as `./rit.sh demo` to see logs appearing on the elk server.
+* Run code in docker-health such as `./dh.sh etl` to see logs appearing on the elk server.
