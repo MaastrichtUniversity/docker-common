@@ -65,13 +65,10 @@ The present files are used for development-purposes.
 
 ### Run elk services
 
-* In docker-common, build and up the following containers:
+* In docker-common, build and up the elk container:
 ```
 ./rit.sh build elk
-./rit.sh build logspout
-
 ./rit.sh up -d elk
-./rit.sh up -d logspout
 ```
 
 * Open your browser and try [http://elk.local.dh.unimaas.nl](http://elk.local.dh.unimaas.nl) with credentials:
