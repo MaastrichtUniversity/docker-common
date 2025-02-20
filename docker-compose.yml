@@ -87,7 +87,13 @@ services:
       dh_default:
         aliases:
           - elk.dh.local
-      dev-hdp_hdp-dh-net:
+      dev-hdp_hdp-dh-mumc-net:
+        aliases:
+          - elk.dh.local
+      dev-hdp_hdp-dh-zio-net:
+        aliases:
+          - elk.dh.local
+      dev-hdp_hdp-dh-envida-net:
         aliases:
           - elk.dh.local
   elastalert:
@@ -145,7 +151,13 @@ services:
       dh_default:
         aliases:
           - logspout.dh.local
-      dev-hdp_hdp-dh-net:
+      dev-hdp_hdp-dh-mumc-net:
+        aliases:
+          - logspout.dh.local
+      dev-hdp_hdp-dh-zio-net:
+        aliases:
+          - logspout.dh.local
+      dev-hdp_hdp-dh-envida-net:
         aliases:
           - logspout.dh.local
   fail2ban:
@@ -186,7 +198,11 @@ networks:
     external: true
   dh_public:
     external: true
-  dev-hdp_hdp-dh-net:
+  dev-hdp_hdp-dh-mumc-net:
+    external: true
+  dev-hdp_hdp-dh-zio-net:
+    external: true
+  dev-hdp_hdp-dh-envida-net:
     external: true
 volumes:
   elastalertdata:

@@ -21,7 +21,6 @@ Therefore, you need to obtain the database manually and place it in the `elk/` f
 ### Get lib-dh.sh
 Download `lib-dh.sh` from [dh-env repository](https://github.com/MaastrichtUniversity/dh-env) and place it one level before `docker-common`.
 
-
 ## Run
 ```
 # Get external repositories
@@ -55,18 +54,15 @@ Download `lib-dh.sh` from [dh-env repository](https://github.com/MaastrichtUnive
 ```
 127.0.0.1 elk.local.dh.unimaas.nl
 ```
-* Run the "proxy" container from docker-health: `./rit.sh up -d proxy`
+* Run the "proxy" container from docker-health: `./dh.sh up -d proxy`
 
 
 ### Run elk services
 
-* In docker-common, build and up the following containers:
+* In docker-common, build and up the elk container:
 ```
 ./rit.sh build elk
-./rit.sh build logspout
-
 ./rit.sh up -d elk
-./rit.sh up -d logspout
 ```
 
 * Open your browser and try [http://elk.local.dh.unimaas.nl](http://elk.local.dh.unimaas.nl) with credentials:
@@ -75,4 +71,4 @@ ELASTIC_USERNAME: elastic
 ELASTIC_PASSWORD: foobar
 ```
 
-* Run code in docker-health such as `./rit.sh demo` to see logs appearing on the elk server.
+* Run code in docker-health such as `./dh.sh etl` to see logs appearing on the elk server.
