@@ -59,6 +59,22 @@ if ! docker network inspect dh_default > /dev/null 2>&1; then
        docker network create dh_default --subnet "172.21.1.0/24" --label "com.docker.compose.project"="dev" --label "com.docker.compose.network"="default"
 fi
 
+if [ ! $(docker network ls --filter name=dev-hdp_hdp-dh-mumc-net --format="true") ]; then
+  echo "Creating network dev-hdp_hdp-dh-mumc-net"
+  docker network create dev-hdp_hdp-dh-mumc-net --subnet "172.32.1.0/24" --label "com.docker.compose.project"="dev-hdp" --label "com.docker.compose.network"="hdp-dh-mumc-net"
+fi
+
+
+if [ ! $(docker network ls --filter name=dev-hdp_hdp-dh-zio-net --format="true") ]; then
+  echo "Creating network dev-hdp_hdp-dh-zio-net"
+  docker network create dev-hdp_hdp-dh-zio-net --subnet "172.33.1.0/24" --label "com.docker.compose.project"="dev-hdp" --label "com.docker.compose.network"="hdp-dh-zio-net"
+fi
+
+if [ ! $(docker network ls --filter name=dev-hdp_hdp-dh-envida-net --format="true") ]; then
+  echo "Creating network dev-hdp_hdp-dh-envida-net"
+  docker network create dev-hdp_hdp-dh-envida-net --subnet "172.34.1.0/24" --label "com.docker.compose.project"="dev-hdp" --label "com.docker.compose.network"="hdp-dh-envida-net"
+fi
+
 # Create volumes
 if [ ! $(docker volume ls --filter name=dev_static_content --format="true") ] ;
       then
