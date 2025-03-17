@@ -12498,7 +12498,7 @@
           "zeek.notice.email_delay_tokens",
           "zeek.notice.identifier",
           "ehr.dataset",
-          "ehr.namespace",
+          "ehr.nodename",
           "ehr.input_data",
           "ehr.id",
           "ehr.topic",
