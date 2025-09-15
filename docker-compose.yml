@@ -17,6 +17,8 @@ services:
       - ./proxy/403.html:/usr/share/nginx/html/403.html
       - ./proxy/502.html:/usr/share/nginx/html/502.html
       - ./proxy/503.html:/usr/share/nginx/html/503.html
+     # Uncomment the line below to test local certs instead of the ones in /etc/ssl/certs
+     # - ./proxy/certs:/etc/nginx/certs
      # Comment this line out when we enter maintenance to show the maintenance page
      # Then recreate the nginx proxy container 
      # - ./proxy/maintenance/503.html:/usr/share/nginx/html/503.html
@@ -53,6 +55,20 @@ services:
         aliases:
           - proxy.dh.local
       dh_public:
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    environment:
+      VIRTUAL_HOST: "vaultwarden.${RIT_ENV}.dh.unimaas.nl"
+      DOMAIN: "https://vaultwarden.${RIT_ENV}.dh.unimaas.nl"
+    volumes:
+      - vaultwarden_data:/data/
+    ports:
+      - 8080:8080
+    networks:
+      dh_default:
+        aliases:
+          - vaultwarden.dh.local
 
   elk:
     build: elk/
@@ -213,3 +229,4 @@ volumes:
     external: true
   dev_upload_logs:
     external: true
+  vaultwarden_data:
