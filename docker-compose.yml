@@ -63,8 +63,6 @@ services:
       DOMAIN: "https://vaultwarden.${RIT_ENV}.dh.unimaas.nl"
     volumes:
       - vaultwarden_data:/data/
-    ports:
-      - 8488:8488
     networks:
       dh_default:
         aliases:
