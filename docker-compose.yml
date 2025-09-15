@@ -61,6 +61,8 @@ services:
     environment:
       VIRTUAL_HOST: "vaultwarden.${RIT_ENV}.dh.unimaas.nl"
       DOMAIN: "https://vaultwarden.${RIT_ENV}.dh.unimaas.nl"
+      SIGNUPS_ALLOWED: "true" # Change this to false after signup
+      ADMIN_TOKEN: ${ADMIN_TOKEN}
     volumes:
       - vaultwarden_data:/data/
     networks:
