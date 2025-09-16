@@ -65,7 +65,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@vaultwarden-db.dh.local:5432/vaultwarden
       SIGNUPS_ALLOWED: "true" # Change this to false after signup
       ADMIN_TOKEN: ${ADMIN_TOKEN}
-      ROCKET_TLS: '{certs="/certs/vaultwarden.${RIT_ENV}.dh.unimaas.nl.crt",key="/certs/vaultwarden.${RIT_ENV}.dh.unimaas.nl.key"}'
+      # ROCKET_TLS: '{certs="/certs/vaultwarden.${RIT_ENV}.dh.unimaas.nl.crt",key="/certs/vaultwarden.${RIT_ENV}.dh.unimaas.nl.key"}'
     volumes:
       - vaultwarden_data:/data/
       - /etc/ssl/certs:/certs:ro
