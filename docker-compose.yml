@@ -57,18 +57,36 @@ services:
       dh_public:
 
   vaultwarden:
-    image: vaultwarden/server:latest
+    image: vaultwarden/server:${VAULTWARDEN_VERSION}
     environment:
       VIRTUAL_HOST: "vaultwarden.${RIT_ENV}.dh.unimaas.nl"
+      VIRTUAL_PROTO: "https"
       DOMAIN: "https://vaultwarden.${RIT_ENV}.dh.unimaas.nl"
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@vaultwarden-db.dh.local:5432/vaultwarden
       SIGNUPS_ALLOWED: "true" # Change this to false after signup
       ADMIN_TOKEN: ${ADMIN_TOKEN}
+      ROCKET_TLS: '{certs="/certs/vaultwarden.local.dh.unimaas.nl.crt",key="/certs/vaultwarden.local.dh.unimaas.nl.key"}'
     volumes:
       - vaultwarden_data:/data/
+      - /etc/ssl/certs:/certs:ro
+    depends_on:
+      - vaultwarden-db
     networks:
       dh_default:
         aliases:
           - vaultwarden.dh.local
+  vaultwarden-db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: vaultwarden
+    volumes:
+      - vaultwarden_db:/var/lib/postgresql/data
+    networks:
+      dh_default:
+        aliases:
+          - vaultwarden-db.dh.local
 
   elk:
     build: elk/
@@ -230,3 +248,4 @@ volumes:
   dev_upload_logs:
     external: true
   vaultwarden_data:
+  vaultwarden_db:
