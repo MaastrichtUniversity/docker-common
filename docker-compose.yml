@@ -37,6 +37,7 @@ services:
       - ./proxy/public_zones.conf/:/etc/nginx/conf.d/public_zones.conf
       - ./proxy/helpcenter_location.conf:/etc/nginx/vhost.d/help.mdr.${RIT_ENV}.dh.unimaas.nl_location
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
+      - ./proxy/keycloak.conf:/etc/nginx/vhost.d/keycloak.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/admintools.conf:/etc/nginx/vhost.d/admin.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/admin_htpasswd:/etc/nginx/htpasswd/admin.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/admin_htpasswd:/etc/nginx/htpasswd/admin-tools-backend.dh.local
@@ -69,6 +70,7 @@ services:
     volumes:
       - vaultwarden_data:/data/
       - /etc/ssl/certs:/certs:ro
+    profiles: ["full"]
     depends_on:
       - vaultwarden-db
     networks:
@@ -83,6 +85,7 @@ services:
       POSTGRES_DB: vaultwarden
     volumes:
       - vaultwarden_db:/var/lib/postgresql/data
+    profiles: ["full"]
     networks:
       dh_default:
         aliases:
