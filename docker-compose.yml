@@ -60,7 +60,7 @@ services:
     image: vaultwarden/server:${VAULTWARDEN_VERSION}
     environment:
       VIRTUAL_HOST: "vaultwarden.${RIT_ENV}.dh.unimaas.nl"
-      VIRTUAL_PROTO: "https"
+      VIRTUAL_PROTO: "http"
       DOMAIN: "https://vaultwarden.${RIT_ENV}.dh.unimaas.nl"
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@vaultwarden-db.dh.local:5432/vaultwarden
       SIGNUPS_ALLOWED: "true" # Change this to false after signup
