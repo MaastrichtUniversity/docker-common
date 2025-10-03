@@ -4,6 +4,7 @@ services:
     environment:
       # otherwise logstash will keep sending its own logs to itself over and over
       LOGSPOUT: ignore
+      TRUST_DOWNSTREAM_PROXY: false
     ports:
       - "80:80"
       - "443:443"
@@ -38,8 +39,6 @@ services:
       - ./proxy/helpcenter_location.conf:/etc/nginx/vhost.d/help.mdr.${RIT_ENV}.dh.unimaas.nl_location
       - ./proxy/mdr.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/admintools.conf:/etc/nginx/vhost.d/admin.${RIT_ENV}.dh.unimaas.nl
-      - ./proxy/admin_htpasswd:/etc/nginx/htpasswd/admin.${RIT_ENV}.dh.unimaas.nl
-      - ./proxy/admin_htpasswd:/etc/nginx/htpasswd/admin-tools-backend.dh.local
       - ./proxy/mdr_location.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
       - ./proxy/dhhome.conf:/etc/nginx/vhost.d/${RIT_ENV}.dh.unimaas.nl
       - ./proxy/dhhome_location.conf:/etc/nginx/vhost.d/${RIT_ENV}.dh.unimaas.nl_location
