@@ -211,5 +211,3 @@ volumes:
     external: true
   dev_upload_logs:
     external: true
-  vaultwarden_data:
-  vaultwarden_db:
