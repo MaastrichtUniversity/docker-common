@@ -4,7 +4,6 @@ services:
     environment:
       # otherwise logstash will keep sending its own logs to itself over and over
       LOGSPOUT: ignore
-      TRUST_DOWNSTREAM_PROXY: false
     ports:
       - "80:80"
       - "443:443"
@@ -18,8 +17,6 @@ services:
       - ./proxy/403.html:/usr/share/nginx/html/403.html
       - ./proxy/502.html:/usr/share/nginx/html/502.html
       - ./proxy/503.html:/usr/share/nginx/html/503.html
-     # Uncomment the line below to test local certs instead of the ones in /etc/ssl/certs
-     # - ./proxy/certs:/etc/nginx/certs
      # Comment this line out when we enter maintenance to show the maintenance page
      # Then recreate the nginx proxy container 
      # - ./proxy/maintenance/503.html:/usr/share/nginx/html/503.html
@@ -54,40 +51,6 @@ services:
         aliases:
           - proxy.dh.local
       dh_public:
-
-  vaultwarden:
-    image: vaultwarden/server:${VAULTWARDEN_VERSION}
-    environment:
-      VIRTUAL_HOST: "vaultwarden.${RIT_ENV}.dh.unimaas.nl"
-      VIRTUAL_PROTO: "https"
-      DOMAIN: "https://vaultwarden.${RIT_ENV}.dh.unimaas.nl"
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@vaultwarden-db.dh.local:5432/vaultwarden
-      SIGNUPS_ALLOWED: "true" # Change this to false after signup
-      ADMIN_TOKEN: ${ADMIN_TOKEN}
-      ROCKET_TLS: '{certs="/certs/vaultwarden.${RIT_ENV}.dh.unimaas.nl.crt",key="/certs/vaultwarden.${RIT_ENV}.dh.unimaas.nl.key"}'
-    volumes:
-      - vaultwarden_data:/data/
-      - /etc/ssl/certs:/certs:ro
-    profiles: ["full"]
-    depends_on:
-      - vaultwarden-db
-    networks:
-      dh_default:
-        aliases:
-          - vaultwarden.dh.local
-  vaultwarden-db:
-    image: postgres:16.10-alpine
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: vaultwarden
-    volumes:
-      - vaultwarden_db:/var/lib/postgresql/data
-    profiles: ["full"]
-    networks:
-      dh_default:
-        aliases:
-          - vaultwarden-db.dh.local
 
   elk:
     build: elk/
