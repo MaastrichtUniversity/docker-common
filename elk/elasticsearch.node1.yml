@@ -74,7 +74,10 @@ network.host: 0.0.0.0
 #
 # Bootstrap the cluster using an initial set of master-eligible nodes:
 #
-cluster.initial_master_nodes: ["elk"]
+# NOTE: Set only for first cluster bootstrap. Keeping it afterwards can trigger warnings/risk.
+#cluster.initial_master_nodes: ["elk"]
+# Single-node dev setup: avoid discovery bootstrap checks on restart.
+discovery.type: single-node
 #
 # For more information, consult the discovery and cluster formation module documentation.
 #
@@ -99,3 +102,7 @@ cluster.routing.allocation.disk.threshold_enabled: true
 cluster.routing.allocation.disk.watermark.flood_stage: 2gb
 cluster.routing.allocation.disk.watermark.low: 10gb
 cluster.routing.allocation.disk.watermark.high: 5gb
+
+### Disable first-start security auto-configuration because this config file is bind-mounted ###
+xpack.security.enabled: false
+xpack.security.autoconfiguration.enabled: false
