@@ -1,5 +1,6 @@
 filebeat.inputs:
-  - type: log
+  - type: filestream
+    id: help-center-backend
     enabled: true
     paths:
       - /var/logs/public-containers/dh-help-center/backend/dh-help-center-backend.log
@@ -7,7 +8,8 @@ filebeat.inputs:
     #Tags
     tags: ["HELP_CENTER_BACKEND"]
 
-  - type: log
+  - type: filestream
+    id: help-center-frontend
     enabled: true
     paths:
       - /var/logs/public-containers/dh-help-center/frontend/dh-help-center-frontend-access.log
@@ -16,7 +18,8 @@ filebeat.inputs:
     #Tags
     tags: [ "HELP_CENTER_FRONTEND" ]
 
-  - type: log
+  - type: filestream
+    id: home-page
     enabled: true
     paths:
       - /var/logs/public-containers/dh-home/dh-home-access.log
@@ -26,7 +29,8 @@ filebeat.inputs:
     tags: [ "DATAHUB_HOMEPAGE" ]
 
 
-  - type: log
+  - type: filestream
+    id: mdr-home
     enabled: true
     paths:
       - /var/logs/public-containers/dh-mdr-home/dh-mdr-home-access.log
