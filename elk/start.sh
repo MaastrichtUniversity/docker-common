@@ -150,7 +150,7 @@ else
   # set number of retries (default: 30, override using ES_CONNECT_RETRY env var)
   re_is_numeric='^[0-9]+$'
   if ! [[ $ES_CONNECT_RETRY =~ $re_is_numeric ]] ; then
-     ES_CONNECT_RETRY=60
+      ES_CONNECT_RETRY=180
   fi
 
   if [ -z "$ELASTICSEARCH_URL" ]; then
@@ -316,7 +316,12 @@ curl -H 'Content-Type: application/json' -XPUT 'http://localhost:9200/_template/
 # create dummy indexes (to avoid issues when ceating aliases)
 echo "
 elasticsearch: create indexes in case they don't exist (will cause ignorable error if index already exist)"
-curl -XPUT "http://localhost:9200/idx-$(date +'%Y.%m')"
+IDX_NAME="idx-$(date +'%Y.%m')"
+if curl -s -o /dev/null -w "%{http_code}" "http://localhost:9200/${IDX_NAME}" | grep -q "^200$"; then
+  echo "elasticsearch: index ${IDX_NAME} already exists"
+else
+  curl -sS -XPUT "http://localhost:9200/${IDX_NAME}" >/dev/null || true
+fi
 
 
 # wait for Kibana to be up (responding to api)
@@ -325,20 +330,21 @@ if ! [[ $KIBANA_CONNECT_RETRY =~ $re_is_numeric ]] ; then
     KIBANA_CONNECT_RETRY=200
 fi
 
+if [ -z "$KIBANA_URL" ]; then
+  KIBANA_URL=http://localhost:5601
+fi
+
 counter=0
-KIBANA_STATUS=""
-while [[ ! *"$KIBANA_STATUS"* =~ "OK" && $counter -le $KIBANA_CONNECT_RETRY ]]; do
-    echo "waiting for Kibana to be up ($counter/$KIBANA_CONNECT_RETRY)"
-    sleep 5
-    ((counter+=5))
-    KIBANA_STATUS="$(curl localhost:5601/status -I 2>/dev/null | grep 'HTTP' | awk '{ $1=""; $2=""; print }')"
-#    echo " + kibana status: '${KIBANA_STATUS}'"
+while [[ "$(curl -s -o /dev/null -w "%{http_code}" ${KIBANA_URL}/api/status)" != "200" && $counter -le $KIBANA_CONNECT_RETRY ]]; do
+  echo "waiting for Kibana to be up ($counter/$KIBANA_CONNECT_RETRY)"
+  sleep 5
+  ((counter+=5))
 done
-if [[ ! *"$KIBANA_STATUS"* =~ "OK" ]]; then
-    echo "Couln't start Kibanah. Exiting."
-    echo "Kibana log follows below."
-    cat /var/log/elasticsearch/elasticsearch.log
-    exit 1
+if [[ "$(curl -s -o /dev/null -w "%{http_code}" ${KIBANA_URL}/api/status)" != "200" ]]; then
+  echo "Couldn't start Kibana. Exiting."
+  echo "Kibana log follows below."
+  cat /var/log/kibana/kibana5.log
+  exit 1
 fi
 
 ## Aliases are added when creating an index (few lines above) from the index template
@@ -355,10 +361,10 @@ curl -H 'Content-Type: application/json' -XPOST 'http://localhost:9200/_aliases'
 # import index patterns in kibana
 echo ""
 echo "kibana: import index patterns"
-curl -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST 'http://localhost:5601/api/saved_objects/index-pattern/all'  -d '{ "attributes":{ "title":"all", "timeFieldName" : "@timestamp"} }'
-curl -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST 'http://localhost:5601/api/saved_objects/index-pattern/core' -d '{ "attributes":{ "title":"core", "timeFieldName" : "@timestamp"} }'
-curl -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST 'http://localhost:5601/api/saved_objects/index-pattern/aux'  -d '{ "attributes":{ "title":"aux", "timeFieldName" : "@timestamp"} }'
-curl -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST 'http://localhost:5601/api/saved_objects/index-pattern/sys'  -d '{ "attributes":{ "title":"sys", "timeFieldName" : "@timestamp"} }'
+curl -sS -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST "${KIBANA_URL}/api/saved_objects/index-pattern/all?overwrite=true"  -d '{ "attributes":{ "title":"all", "timeFieldName" : "@timestamp"} }' >/dev/null || true
+curl -sS -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST "${KIBANA_URL}/api/saved_objects/index-pattern/core?overwrite=true" -d '{ "attributes":{ "title":"core", "timeFieldName" : "@timestamp"} }' >/dev/null || true
+curl -sS -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST "${KIBANA_URL}/api/saved_objects/index-pattern/aux?overwrite=true"  -d '{ "attributes":{ "title":"aux", "timeFieldName" : "@timestamp"} }' >/dev/null || true
+curl -sS -H "Content-Type: application/json" -H "kbn-xsrf: reporting" -XPOST "${KIBANA_URL}/api/saved_objects/index-pattern/sys?overwrite=true"  -d '{ "attributes":{ "title":"sys", "timeFieldName" : "@timestamp"} }' >/dev/null || true
 
 
 # set default pattern in kibana

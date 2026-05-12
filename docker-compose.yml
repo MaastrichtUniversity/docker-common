@@ -135,6 +135,8 @@ services:
     environment:
       DEBUG: "true"
       LOGSPOUT: ignore
+      RETRY_STARTUP: "true"
+      RETRY_SEND: "true"
       MULTILINE_ENABLE_DEFAULT: "true"
       MULTILINE_MATCH: "nonfirst"
       MULTILINE_PATTERN: '^(\s|{>)'
