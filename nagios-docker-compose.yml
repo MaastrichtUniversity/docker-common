@@ -3,13 +3,13 @@ services:
     build: externals/nagios-docker/
     hostname: nagios
     environment:
-      NAGIOS_FQDN: nagios.${RIT_ENV}.rit.unimaas.nl
+      NAGIOS_FQDN: nagios.${RIT_ENV}.dh.unimaas.nl
       NAGIOS_TIMEZONE: Europe/Amsterdam
       MAILER_MICROSERVICE_HOST: mailer.${RIT_ENV}.dh.unimaas.nl
       MAILER_MICROSERVICE_USER: user
       MAILER_MICROSERVICE_PASS: password
       LOGSTASH_TAGS: NAGIOS, AUX
-      VIRTUAL_HOST: nagios.${RIT_ENV}.rit.unimaas.nl
+      VIRTUAL_HOST: nagios.${RIT_ENV}.dh.unimaas.nl
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./externals/nagios-docker/cust-plugins:/opt/Custom-Nagios-Plugins:ro
