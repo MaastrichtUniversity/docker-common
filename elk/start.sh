@@ -234,7 +234,7 @@ fi
 
 # Set the default once for both wait stages; allow a numeric environment override.
 if ! [[ $KIBANA_CONNECT_RETRY =~ ^[0-9]+$ ]] ; then
-  KIBANA_CONNECT_RETRY=2000
+  KIBANA_CONNECT_RETRY=350
 fi
 
 if [ -z "$KIBANA_START" ]; then
