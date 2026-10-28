@@ -232,6 +232,11 @@ fi
 
 ### Kibana
 
+# Set the default once for both wait stages; allow a numeric environment override.
+if ! [[ $KIBANA_CONNECT_RETRY =~ ^[0-9]+$ ]] ; then
+  KIBANA_CONNECT_RETRY=2000
+fi
+
 if [ -z "$KIBANA_START" ]; then
   KIBANA_START=1
 fi
@@ -263,11 +268,6 @@ if [ -x /usr/local/bin/elk-post-hooks.sh ]; then
 
   ### ... then wait for Kibana to be up first to ensure that .kibana index is
   ### created before the post-hooks are executed
-    # set number of retries (default: 30, override using KIBANA_CONNECT_RETRY env var)
-    if ! [[ $KIBANA_CONNECT_RETRY =~ $re_is_numeric ]] ; then
-       KIBANA_CONNECT_RETRY=200
-    fi
-
     if [ -z "$KIBANA_URL" ]; then
       KIBANA_URL=http://localhost:5601
     fi
@@ -325,10 +325,6 @@ fi
 
 
 # wait for Kibana to be up (responding to api)
-
-if ! [[ $KIBANA_CONNECT_RETRY =~ $re_is_numeric ]] ; then
-    KIBANA_CONNECT_RETRY=200
-fi
 
 if [ -z "$KIBANA_URL" ]; then
   KIBANA_URL=http://localhost:5601
