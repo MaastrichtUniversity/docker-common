@@ -1,6 +1,10 @@
 services:
   proxy:
-    image: jwilder/nginx-proxy:${ENV_TAG_PROXY}
+    build:
+      context: proxy/
+      args:
+        ENV_TAG_PROXY: ${ENV_TAG_PROXY}
+    image: ${ENV_REGISTRY_HOST}/docker-common/nginx-proxy:${ENV_TAG}
     environment:
       # otherwise logstash will keep sending its own logs to itself over and over
       LOGSPOUT: ignore
@@ -17,12 +21,12 @@ services:
       - ./proxy/403.html:/usr/share/nginx/html/403.html
       - ./proxy/502.html:/usr/share/nginx/html/502.html
       - ./proxy/503.html:/usr/share/nginx/html/503.html
-     # Comment this line out when we enter maintenance to show the maintenance page
-     # Then recreate the nginx proxy container 
-     # - ./proxy/maintenance/503.html:/usr/share/nginx/html/503.html
-     # The lines below will require a MDR SSL certificate to be symlinked to /etc/ssl/certs/default.crt and /etc/ssl/certs/default.key
-     # $ ln -s mdr.${RIT_ENV}.dh.unimaas.nl.crt default.crt
-     # - ./proxy/nginx.tmpl:/app/nginx.tmpl
+      # Comment this line out when we enter maintenance to show the maintenance page
+      # Then recreate the nginx proxy container
+      # - ./proxy/maintenance/503.html:/usr/share/nginx/html/503.html
+      # The lines below will require a MDR SSL certificate to be symlinked to /etc/ssl/certs/default.crt and /etc/ssl/certs/default.key
+      # $ ln -s mdr.${RIT_ENV}.dh.unimaas.nl.crt default.crt
+      # - ./proxy/nginx.tmpl:/app/nginx.tmpl
       - ./proxy/pacman.conf:/etc/nginx/vhost.d/pacman.${RIT_ENV}.rit.unimaas.nl
       - ./proxy/davrods.conf:/etc/nginx/vhost.d/download.${RIT_ENV}.dh.unimaas.nl
       - ./proxy/davrods_upload.conf:/etc/nginx/vhost.d/upload.${RIT_ENV}.dh.unimaas.nl
@@ -41,12 +45,12 @@ services:
       - ./proxy/mdr_dev_location.conf:/etc/nginx/vhost.d/mdr.${RIT_ENV}.dh.unimaas.nl_location
       - ./proxy/dhhome.conf:/etc/nginx/vhost.d/${RIT_ENV}.dh.unimaas.nl
       - ./proxy/dhhome_dev_location.conf:/etc/nginx/vhost.d/${RIT_ENV}.dh.unimaas.nl_location
-      # To mock MDR production environment, follow these steps:
-      # 1. Change './proxy/app_mdr.conf' to './proxy/app_mdr_prd.conf' in the volume bind above
-      # 2. Uncomment the dev_static_content volume bind below
-      # 3. Set 'DJANGO_ENABLE_DEBUG=False' in docker-dev's docker-compose
-      # ! Beware that the static file auto-reload won't work anymore as they are then served by the proxy!
-#      - dev_static_content:/static
+    # To mock MDR production environment, follow these steps:
+    # 1. Change './proxy/app_mdr.conf' to './proxy/app_mdr_prd.conf' in the volume bind above
+    # 2. Uncomment the dev_static_content volume bind below
+    # 3. Set 'DJANGO_ENABLE_DEBUG=False' in docker-dev's docker-compose
+    # ! Beware that the static file auto-reload won't work anymore as they are then served by the proxy!
+    #      - dev_static_content:/static
     networks:
       dh_default:
         ipv4_address: 172.21.1.100
@@ -66,12 +70,12 @@ services:
       LOGSPOUT: ignore
       VIRTUAL_HOST: elk.${RIT_ENV}.dh.unimaas.nl
     ports:
-#      - "80:80"
+      #      - "80:80"
       - "5601:5601"
       # Expose Filebeat-ELK-port that accepts logs from non-Docker services
       - "5044:5044"
       # Expose Logstash-HTTP-port that accepts logs from non-Docker services
-#      - "5001:5001"
+      #      - "5001:5001"
       # expose port for elasticsearch api's
       - "9200:9200"
     volumes:
@@ -108,9 +112,9 @@ services:
       ELASTICSEARCH_USER: elastic
       ELASTICSEARCH_PASSWORD: foobar
       LOGSPOUT: ignore
-#      ELASTICSEARCH_TLS - Use HTTPS when connecting to Elasticsearch (True/False). Default is False.
-#      ELASTICSEARCH_TLS_VERIFY - Verify server (Elasticsearch) certificate (True/False). Default is False.
-#      ELASTALERT_INDEX - Name of Elastalert writeback index in Elasticseach. Defaults to elastalert_status.
+    #      ELASTICSEARCH_TLS - Use HTTPS when connecting to Elasticsearch (True/False). Default is False.
+    #      ELASTICSEARCH_TLS_VERIFY - Verify server (Elasticsearch) certificate (True/False). Default is False.
+    #      ELASTALERT_INDEX - Name of Elastalert writeback index in Elasticseach. Defaults to elastalert_status.
     volumes:
       - elastalertdata:/opt/logs
       - ./externals/elastalert-docker/config:/opt/config
@@ -130,8 +134,8 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock
       - /etc/localtime:/etc/localtime:ro
-#    depends_on:
-#      - "elk"
+    #    depends_on:
+    #      - "elk"
     environment:
       DEBUG: "true"
       LOGSPOUT: ignore
@@ -181,7 +185,7 @@ services:
       dockerfile: Dockerfile
     image: ${ENV_REGISTRY_HOST}/docker-dev/filebeat-public-logs:${ENV_TAG}
     volumes:
-          - ./public-logs/:/var/logs/public-containers/ #acc/prd
+      - ./public-logs/:/var/logs/public-containers/ #acc/prd
     profiles: ["full"]
     networks:
       default:
